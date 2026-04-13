@@ -240,12 +240,21 @@ export default function InvestmentPlansPage() {
 
                     <div className="relative z-10">
                       <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="space-y-2">
-                          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-500">
-                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
-                             Institutional Mandate
+                        <div className="flex items-center gap-5">
+                          <div className="h-16 w-16 overflow-hidden rounded-full ring-4 ring-slate-50 shadow-xl">
+                             <img
+                               src={investment.planName.toLowerCase().includes('eth') ? '/assets/crypto/eth.jpg' : '/assets/crypto/btc.jpg'}
+                               alt="Mandate Logo"
+                               className="h-full w-full object-cover"
+                             />
                           </div>
-                          <h3 className="text-4xl font-black tracking-tighter text-slate-900">{investment.planName}</h3>
+                          <div className="space-y-2">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-500">
+                               <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
+                               Institutional Mandate
+                            </div>
+                            <h3 className="text-4xl font-black tracking-tighter text-slate-900">{investment.planName}</h3>
+                          </div>
                         </div>
                         <div className="inline-flex items-center gap-4 rounded-[24px] bg-slate-950 px-6 py-4 text-sm font-bold text-white shadow-2xl shadow-slate-200">
                           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">

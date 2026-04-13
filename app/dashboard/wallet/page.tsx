@@ -180,8 +180,12 @@ export default function WalletPage() {
               <CardContent className="pt-6">
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                      <Wallet className="text-primary" size={24} />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 overflow-hidden ring-1 ring-slate-100 shadow-inner">
+                      <img
+                        src={wallet.network.toLowerCase().includes('btc') ? '/assets/crypto/btc.jpg' : '/assets/crypto/eth.jpg'}
+                        alt={wallet.network}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                     <div className="min-w-0">
                       <p className="font-bold text-gray-900">{wallet.name}</p>
