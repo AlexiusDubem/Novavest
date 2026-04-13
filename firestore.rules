@@ -1,0 +1,156 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && (request.resource.data.role == 'user' || request.resource.data.role == 'admin')
+        && request.resource.data.accountStatus == 'active'
+        && request.resource.data.suspensionReason == ''
+        && request.resource.data.balance == 0
+        && request.resource.data.activeLoanBalance == 0;
+
+      allow read: if isOwner(userId) || isAdmin();
+
+      allow update: if isAdmin() || (
+        isOwner(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+        && (request.resource.data.accountStatus == resource.data.accountStatus || request.resource.data.accountStatus == 'inactive')
+        && request.resource.data.suspensionReason == resource.data.suspensionReason
+        && request.resource.data.balance == resource.data.balance
+        && request.resource.data.activeLoanBalance == resource.data.activeLoanBalance
+        && request.resource.data.kycLevel == resource.data.kycLevel
+        && request.resource.data.kycStatus == resource.data.kycStatus
+      );
+
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    match /wallets/{walletId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'active'
+      );
+      allow update, delete: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+    }
+
+    match /supportedAssets/{assetId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /transactions/{transactionId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /depositRequests/{requestId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.adminNote == ''
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /withdrawalRequests/{requestId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.adminNote == ''
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /loanRequests/{requestId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.adminNote == ''
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /kycSubmissions/{requestId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.adminNote == ''
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.read == false
+      );
+      allow update: if isAdmin() || (
+        signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.title == resource.data.title
+        && request.resource.data.message == resource.data.message
+        && request.resource.data.type == resource.data.type
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /supportTickets/{ticketId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'Open'
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /investmentRequests/{requestId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /investments/{investmentId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /meta/{documentId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
