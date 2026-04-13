@@ -46,7 +46,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   }
 
   const navItems = isAdmin
-    ? [...DASHBOARD_NAV_ITEMS, { label: 'Control Center', href: '/admin', icon: 'admin' }]
+    ? [...DASHBOARD_NAV_ITEMS, { label: 'Control Center', href: '/control', icon: 'admin' }]
     : DASHBOARD_NAV_ITEMS
   const filteredNavItems = profile?.accountStatus === 'suspended'
     ? navItems.filter((item) => item.href === '/dashboard/support')
