@@ -1,83 +1,78 @@
-'use client'
+"use client";
 
-import { User, Briefcase, Rocket, Laptop, Star } from 'lucide-react'
+import { useState } from "react";
+import { TestimonialCard } from "@/components/ui/testimonial-cards";
 
 const testimonials = [
   {
-    name: 'Sarah Chen',
-    role: 'Investment Manager',
-    company: 'Tech Innovations',
-    icon: User,
-    rating: 5,
-    quote: 'NOVAINVEST made it incredibly easy to diversify my portfolio globally. The platform is intuitive and the fees are transparent.',
+    id: 1,
+    testimonial: "The precision of NovaVest's algorithmic grid is unmatched. Our portfolio ROI expanded by 22% in the first quarter alone.",
+    author: "Marcello G. - Asset Manager @ FinTech Global"
   },
   {
-    name: 'Marcus Johnson',
-    role: 'Financial Analyst',
-    company: 'Global Capital',
-    icon: Briefcase,
-    rating: 5,
-    quote: 'I&apos;ve been using NOVAINVEST for 18 months now. My portfolio has returned 24% annually, which is exceptional.',
+    id: 2,
+    testimonial: "Integrating our treasury with NovaVest was the best strategic move this year. The 24/7 liquidity pulse is game-changing.", 
+    author: "Elena S. - Risk Analyst @ Credit Suisse"
   },
   {
-    name: 'Elena Rodriguez',
-    role: 'Entrepreneur',
-    company: 'Digital Solutions',
-    icon: Rocket,
-    rating: 5,
-    quote: 'The real-time analytics and crypto integration are game-changers. Highly recommend to anyone serious about investing.',
-  },
-  {
-    name: 'David Kim',
-    role: 'Portfolio Manager',
-    company: 'Wealth Partners',
-    icon: Laptop,
-    rating: 5,
-    quote: 'Best investment platform I&apos;ve used. Customer support is responsive and the security features are top-notch.',
-  },
-]
+    id: 3,
+    testimonial: "Institutional security meets radical transparency. I've never seen a trading terminal this polished and reliable.",
+    author: "David R. - Lead Trader @ Sovereign Wealth"
+  }
+];
 
 export function TestimonialsSection() {
+  const [positions, setPositions] = useState(["front", "middle", "back"]);
+
+  const handleShuffle = () => {
+    setPositions((prev) => {
+      const newPositions = [...prev];
+      newPositions.unshift(newPositions.pop()!);
+      return newPositions;
+    });
+  };
+
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-4">Trusted by Investors Worldwide</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Join thousands of satisfied investors who are building wealth with NOVAINVEST.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="bg-gray-50 rounded-xl p-6 border border-gray-200 hover:border-secondary hover:shadow-lg transition-all duration-300"
-            >
-              {/* Rating */}
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <p className="text-gray-700 mb-4 text-sm">{testimonial.quote}</p>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 border-t border-gray-200 pt-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  {testimonial.icon ? <testimonial.icon size={24} /> : <User size={24} />}
+    <section className="relative overflow-hidden bg-slate-50 py-24 sm:py-32">
+       <div className="container relative z-10 mx-auto px-6">
+          <div className="flex flex-col items-center justify-between gap-20 lg:flex-row">
+             <div className="max-w-xl space-y-8">
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 shadow-sm">
+                   Institutional Trust
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm">{testimonial.name}</p>
-                  <p className="text-xs text-gray-600">{testimonial.role}</p>
+                <h2 className="text-4xl font-black tracking-tighter text-slate-900 sm:text-6xl">
+                   Validated by the World's Best.
+                </h2>
+                <p className="text-lg font-bold leading-relaxed text-slate-500">
+                   Join 45,000+ institutional traders who rely on NovaVest for high-frequency asset management and secure treasury growth.
+                </p>
+                <div className="flex items-center gap-8 pt-4">
+                   <div>
+                      <p className="text-3xl font-black text-slate-900">45k+</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Terminals</p>
+                   </div>
+                   <div className="h-10 w-px bg-slate-200" />
+                   <div>
+                      <p className="text-3xl font-black text-slate-900">$2.4B</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Assets Managed</p>
+                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+             </div>
+
+             <div className="relative h-[450px] w-full max-w-[400px] flex justify-center">
+                <div className="relative h-[450px] w-[350px]">
+                  {testimonials.map((testimonial, index) => (
+                    <TestimonialCard
+                      key={testimonial.id}
+                      {...testimonial}
+                      handleShuffle={handleShuffle}
+                      position={positions[index]}
+                    />
+                  ))}
+                </div>
+             </div>
+          </div>
+       </div>
     </section>
-  )
+  );
 }

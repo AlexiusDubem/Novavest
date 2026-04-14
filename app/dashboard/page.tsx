@@ -9,6 +9,7 @@ import {
   faCopy,
   faClock,
 } from '@fortawesome/free-solid-svg-icons'
+import { faBtc, faEthereum } from '@fortawesome/free-brands-svg-icons'
 
 const actions = [
   { label: 'Fund Wallet', icon: faWallet, href: '/dashboard/deposit', description: 'Send funds to a live wallet and notify NovaVest once payment is made.' },
@@ -173,11 +174,10 @@ export default function DashboardPage() {
           <div className="relative z-10 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex-1 space-y-6">
               <div className="flex flex-wrap items-center gap-4">
-                 <div className="h-16 w-16 overflow-hidden rounded-full ring-4 ring-white/10 shadow-2xl">
-                    <img
-                      src={activeInvestment.planName.toLowerCase().includes('eth') ? '/assets/crypto/eth.jpg' : '/assets/crypto/btc.jpg'}
-                      alt="Mandate Logo"
-                      className="h-full w-full object-cover"
+                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/5 ring-4 ring-white/10 shadow-2xl text-3xl">
+                    <FontAwesomeIcon 
+                      icon={activeInvestment.planName.toLowerCase().includes('eth') ? faEthereum : faBtc} 
+                      className={activeInvestment.planName.toLowerCase().includes('eth') ? 'text-blue-400' : 'text-amber-500'}
                     />
                  </div>
                  <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-400">
@@ -261,12 +261,11 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 gap-4">
             {wallets.slice(0, 4).map((wallet) => (
               <Link key={wallet.id} href="/dashboard/wallet" className="group flex items-center gap-5 rounded-[32px] border border-slate-200 bg-white p-5 transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200 hover:-translate-y-1">
-                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-slate-50 overflow-hidden ring-1 ring-slate-100 transition group-hover:ring-emerald-400/30">
-                  <img
-                    src={wallet.network.toLowerCase().includes('btc') ? '/assets/crypto/btc.jpg' : '/assets/crypto/eth.jpg'}
-                    alt={wallet.network}
-                    className="h-full w-full object-cover"
-                  />
+                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-slate-50 overflow-hidden ring-1 ring-slate-100 transition group-hover:ring-emerald-400/30 text-2xl">
+                   <FontAwesomeIcon 
+                     icon={wallet.network.toLowerCase().includes('btc') ? faBtc : faEthereum} 
+                     className={wallet.network.toLowerCase().includes('btc') ? 'text-amber-500' : 'text-blue-400'}
+                   />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-lg font-black text-slate-900 uppercase tracking-tight">{wallet.name}</p>

@@ -16,11 +16,15 @@ import {
   faUser,
   faUserCheck,
   faWallet,
+  faShieldHalved,
+  faArrowRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons'
 import { Shield } from 'lucide-react'
 import { BrandLogo } from '@/components/brand/BrandLogo'
 import { useAuth } from '@/hooks/use-auth'
 import { DASHBOARD_NAV_ITEMS } from '@/lib/constants'
+import { signOutUser } from '@/lib/firebase/auth'
+import { useRouter } from 'next/navigation'
 
 interface SidebarProps {
   open: boolean
@@ -29,6 +33,7 @@ interface SidebarProps {
 
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const { isAdmin, profile } = useAuth()
 
   const iconMap: Record<string, React.ReactNode> = {
@@ -52,6 +57,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const filteredNavItems = profile?.accountStatus === 'suspended'
     ? navItems.filter((item) => item.href === '/dashboard/support')
     : navItems
+
+  const handleSignOut = async () => {
+    await signOutUser()
+    router.push('/login')
+  }
 
   return (
     <>
@@ -110,8 +120,16 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           })}
         </nav>
 
-        <div className="border-t border-slate-100 px-8 py-6">
-          <div className="flex items-center gap-3 opacity-40 grayscale group hover:grayscale-0 hover:opacity-100 transition-all">
+        <div className="border-t border-slate-100 px-4 py-6 space-y-4">
+          <button
+            onClick={handleSignOut}
+            className="flex w-full items-center gap-3.5 rounded-2xl px-5 py-4 text-[13px] font-black uppercase tracking-widest text-rose-500 hover:bg-rose-50 transition-all"
+          >
+            <FontAwesomeIcon icon={faArrowRightFromBracket} className="h-4 w-4" />
+            Sign Out
+          </button>
+          
+          <div className="flex items-center gap-3 px-4 opacity-40 grayscale group hover:grayscale-0 hover:opacity-100 transition-all">
              <div className="h-2 w-2 rounded-full bg-emerald-500" />
              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Live Pulse Node 2.1</p>
           </div>

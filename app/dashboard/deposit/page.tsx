@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { BadgeCheck, Copy, ShieldCheck, Wallet2, ArrowRightLeft } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBtc, faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { useAuth } from '@/hooks/use-auth'
 import { formatCurrency, formatDate } from '@/lib/formatters'
 import { fireAlert } from '@/lib/alerts'
@@ -168,11 +170,10 @@ export default function DepositPage() {
                 className={`flex w-full items-center justify-between rounded-2xl border px-5 py-5 transition-all active:scale-[0.98] ${selectedAsset?.id === asset.id ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20' : 'border-slate-100 bg-slate-50/50 hover:border-slate-200'}`}
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 overflow-hidden ring-1 ring-slate-100 shadow-inner">
-                    <img
-                      src={asset.symbol === 'BTC' ? '/assets/crypto/btc.jpg' : '/assets/crypto/eth.jpg'}
-                      alt={asset.symbol}
-                      className="h-full w-full object-cover"
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 overflow-hidden ring-1 ring-slate-100 shadow-inner text-xl">
+                    <FontAwesomeIcon 
+                      icon={asset.symbol === 'BTC' ? faBtc : faEthereum} 
+                      className={asset.symbol === 'BTC' ? 'text-amber-500' : 'text-blue-400'}
                     />
                   </div>
                   <div className="text-left">
@@ -227,11 +228,10 @@ export default function DepositPage() {
 
               <div className="flex flex-col items-center justify-center rounded-[28px] border border-slate-100 bg-slate-50/30 p-8 lg:w-80">
                  <div className="mb-8 flex flex-col items-center gap-4">
-                   <div className="h-24 w-24 overflow-hidden rounded-full ring-4 ring-white shadow-2xl transition hover:scale-105">
-                      <img
-                        src={selectedAsset?.symbol === 'BTC' ? '/assets/crypto/btc.jpg' : '/assets/crypto/eth.jpg'}
-                        alt={selectedAsset?.symbol}
-                        className="h-full w-full object-cover"
+                   <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white ring-4 ring-white shadow-2xl transition hover:scale-105 text-5xl">
+                      <FontAwesomeIcon 
+                        icon={selectedAsset?.symbol === 'BTC' ? faBtc : faEthereum} 
+                        className={selectedAsset?.symbol === 'BTC' ? 'text-amber-500' : 'text-blue-400'}
                       />
                    </div>
                    <div className="text-center">

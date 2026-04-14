@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Copy, Plus, ShieldCheck, Wallet, Trash2, Edit2 } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBtc, faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { useAuth } from '@/hooks/use-auth'
 import { createWallet, deleteWallet, subscribeToWallets, updateWallet } from '@/lib/firebase/firestore'
 import { fireAlert } from '@/lib/alerts'
@@ -180,11 +182,10 @@ export default function WalletPage() {
               <CardContent className="pt-6">
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 overflow-hidden ring-1 ring-slate-100 shadow-inner">
-                      <img
-                        src={wallet.network.toLowerCase().includes('btc') ? '/assets/crypto/btc.jpg' : '/assets/crypto/eth.jpg'}
-                        alt={wallet.network}
-                        className="h-full w-full object-cover"
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 overflow-hidden ring-1 ring-slate-100 shadow-inner text-xl">
+                      <FontAwesomeIcon 
+                        icon={wallet.network.toLowerCase().includes('btc') ? faBtc : faEthereum} 
+                        className={wallet.network.toLowerCase().includes('btc') ? 'text-amber-500' : 'text-blue-400'}
                       />
                     </div>
                     <div className="min-w-0">

@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { TrendingUp, Clock, DollarSign, Timer } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBtc, faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -241,11 +243,10 @@ export default function InvestmentPlansPage() {
                     <div className="relative z-10">
                       <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center gap-5">
-                          <div className="h-16 w-16 overflow-hidden rounded-full ring-4 ring-slate-50 shadow-xl">
-                             <img
-                               src={investment.planName.toLowerCase().includes('eth') ? '/assets/crypto/eth.jpg' : '/assets/crypto/btc.jpg'}
-                               alt="Mandate Logo"
-                               className="h-full w-full object-cover"
+                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/5 ring-4 ring-slate-50 shadow-xl text-3xl">
+                             <FontAwesomeIcon
+                               icon={investment.planName.toLowerCase().includes('eth') ? faEthereum : faBtc}
+                               className={investment.planName.toLowerCase().includes('eth') ? 'text-blue-400' : 'text-amber-500'}
                              />
                           </div>
                           <div className="space-y-2">
@@ -303,8 +304,8 @@ export default function InvestmentPlansPage() {
                       
                       <div className="mt-10 flex flex-col gap-4 border-t border-slate-50 pt-8 sm:flex-row sm:items-center sm:justify-between">
                          <div className="flex items-center gap-4">
-                           <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-slate-100 shadow-sm">
-                             <img src="/assets/crypto/btc.jpg" alt="Feed" className="h-full w-full object-cover" />
+                           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ring-2 ring-slate-100 shadow-sm text-lg">
+                             <FontAwesomeIcon icon={faBtc} className="text-amber-500" />
                            </div>
                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">
                              Live mandate initiated {formatDateTime(investment.startedAt)}<br/>
