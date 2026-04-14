@@ -1,6 +1,8 @@
 'use client'
 
 import { Check, Sparkles, TrendingUp, ShieldCheck, Zap } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBtc } from '@fortawesome/free-brands-svg-icons'
 import { Button } from '@/components/ui/button'
 import { INVESTMENT_PLANS } from '@/lib/constants'
 import Link from 'next/link'
@@ -53,8 +55,8 @@ export function InvestmentPlansSection() {
                     {plan.name}
                   </h3>
                   <div className="flex items-center gap-2 text-slate-500">
-                    <div className="h-5 w-5 overflow-hidden rounded-full ring-1 ring-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                      <img src="/assets/crypto/btc.jpg" alt="BTC" className="h-full w-full object-cover" />
+                    <div className="flex h-5 w-5 items-center justify-center rounded-full ring-1 ring-white/10 text-sm">
+                      <FontAwesomeIcon icon={faBtc} className="text-amber-400" />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest leading-none">Bilateral Mandate</span>
                   </div>

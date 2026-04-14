@@ -180,9 +180,9 @@ export default function DashboardPage() {
           <Link
             key={action.label}
             href={action.href}
-            className="flex flex-col items-start rounded-[32px] border border-slate-200 bg-white p-6 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-200 sm:p-8 group"
+            className="flex flex-col items-start rounded-[32px] border border-slate-200 bg-white p-6 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-100 sm:p-8 group"
           >
-            <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-slate-50 text-slate-400 group-hover:bg-slate-950 group-hover:text-white transition-all duration-500">
+            <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-slate-50 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-all duration-500">
               <FontAwesomeIcon icon={action.icon} />
             </div>
             <p className="mt-8 text-lg font-black tracking-tight text-slate-950 uppercase">{action.label}</p>
@@ -193,51 +193,51 @@ export default function DashboardPage() {
 
       {/* Active Investment Card */}
       {activeInvestment && (
-        <section className="relative overflow-hidden rounded-[40px] bg-slate-950 p-8 shadow-2xl sm:p-12 transition-all">
-          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-500/10 blur-[100px]" />
-          <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-500/10 blur-[100px]" />
+        <section className="relative overflow-hidden rounded-[40px] border-2 border-emerald-100 bg-gradient-to-br from-white via-emerald-50/30 to-white p-8 shadow-xl sm:p-12 transition-all">
+          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-400/10 blur-[100px]" />
+          <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-400/8 blur-[100px]" />
 
           <div className="relative z-10 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex-1 space-y-6">
               <div className="flex flex-wrap items-center gap-4">
-                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/5 ring-4 ring-white/10 shadow-2xl text-3xl">
+                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 ring-4 ring-slate-100 shadow-xl text-3xl">
                     <FontAwesomeIcon 
                       icon={activeInvestment.planName.toLowerCase().includes('eth') ? faEthereum : faBtc} 
                       className={activeInvestment.planName.toLowerCase().includes('eth') ? 'text-blue-400' : 'text-amber-500'}
                     />
                  </div>
-                 <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-400">
+                 <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/40 bg-emerald-50 px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
                   </span>
                   Active Mandate
                 </div>
-                <div className="rounded-full bg-white/5 border border-white/10 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                   <FontAwesomeIcon icon={faClock} className="mr-2 text-emerald-400" />
-                   Live Pulse: <span className="font-mono text-white ml-1 text-xs">{formatCountdown(activeInvestment)}</span>
+                <div className="rounded-full bg-slate-50 border border-slate-200 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                   <FontAwesomeIcon icon={faClock} className="mr-2 text-emerald-500" />
+                   Live Pulse: <span className="font-mono text-slate-900 ml-1 text-xs">{formatCountdown(activeInvestment)}</span>
                 </div>
               </div>
-              <h2 className="text-5xl font-black tracking-tighter text-white sm:text-7xl">{activeInvestment.planName}</h2>
-              <p className="max-w-xl text-base font-bold text-slate-400 leading-relaxed sm:text-lg">
+              <h2 className="text-5xl font-black tracking-tighter text-slate-950 sm:text-7xl">{activeInvestment.planName}</h2>
+              <p className="max-w-xl text-base font-bold text-slate-500 leading-relaxed sm:text-lg">
                 Quantum mandate currently active. Accumulating ROI on sub-atomic cycle maturity ({activeInvestment.termDays} days).
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 lg:w-full lg:max-w-[700px]">
-              <div className="rounded-[32px] border border-white/5 bg-white/5 p-8 transition hover:bg-white/10">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Principal</p>
-                <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-white sm:text-4xl">{formatCurrency(activeInvestment.principal)}</p>
+              <div className="rounded-[32px] border border-slate-100 bg-white p-8 shadow-sm transition hover:shadow-md">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Principal</p>
+                <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-slate-900 sm:text-4xl">{formatCurrency(activeInvestment.principal)}</p>
               </div>
-              <div className="rounded-[32px] border border-emerald-500/20 bg-emerald-500/10 p-8 transition hover:shadow-2xl hover:shadow-emerald-500/10">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400/70">Projected ROI</p>
-                <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-emerald-400 sm:text-4xl">+{activeInvestment.roiPercent}%</p>
+              <div className="rounded-[32px] border border-emerald-100 bg-emerald-50 p-8 transition hover:shadow-md">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">Projected ROI</p>
+                <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-emerald-600 sm:text-4xl">+{activeInvestment.roiPercent}%</p>
               </div>
-              <div className="rounded-[32px] border border-white/5 bg-white/5 p-8 sm:col-span-2 xl:col-span-1">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Maturity Window</p>
+              <div className="rounded-[32px] border border-slate-100 bg-white p-8 shadow-sm sm:col-span-2 xl:col-span-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Maturity Window</p>
                 <div className="mt-4 flex items-baseline gap-2">
-                  <span className="font-mono text-3xl font-black tracking-tighter text-white sm:text-4xl">{activeInvestment.termDays}</span>
-                  <span className="text-[11px] font-black text-slate-500 tracking-[0.25em]">DAYS</span>
+                  <span className="font-mono text-3xl font-black tracking-tighter text-slate-900 sm:text-4xl">{activeInvestment.termDays}</span>
+                  <span className="text-[11px] font-black text-slate-400 tracking-[0.25em]">DAYS</span>
                 </div>
               </div>
             </div>
@@ -289,8 +289,8 @@ export default function DashboardPage() {
               <Link key={wallet.id} href="/dashboard/wallet" className="group flex items-center gap-5 rounded-[32px] border border-slate-200 bg-white p-5 transition-all duration-300 hover:shadow-2xl hover:shadow-slate-200 hover:-translate-y-1">
                 <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-slate-50 overflow-hidden ring-1 ring-slate-100 transition group-hover:ring-emerald-400/30 text-2xl">
                    <FontAwesomeIcon 
-                     icon={wallet.network.toLowerCase().includes('btc') ? faBtc : faEthereum} 
-                     className={wallet.network.toLowerCase().includes('btc') ? 'text-amber-500' : 'text-blue-400'}
+                     icon={wallet.network.toLowerCase().includes('btc') || wallet.network.toLowerCase().includes('bitcoin') ? faBtc : faEthereum} 
+                     className={wallet.network.toLowerCase().includes('btc') || wallet.network.toLowerCase().includes('bitcoin') ? 'text-amber-500' : 'text-blue-400'}
                    />
                 </div>
                 <div className="min-w-0 flex-1">

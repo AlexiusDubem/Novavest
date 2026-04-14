@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { CandlestickChart, TrendingUp, Zap } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBtc } from '@fortawesome/free-brands-svg-icons'
 import type { InvestmentRecord } from '@/lib/firebase/types'
 
 type Timeframe = 1 | 7 | 30 | 90
@@ -105,8 +107,8 @@ export function MarketSimulationChart({ activeInvestment }: { activeInvestment?:
                  {activeInvestment ? `${activeInvestment.planName} Performance` : 'Global Market Terminal'}
                </h2>
                <div className="flex items-center gap-4">
-                 <div className="h-6 w-6 overflow-hidden rounded-full ring-1 ring-slate-100 shadow-sm flex-shrink-0">
-                   <img src="/assets/crypto/btc.jpg" alt="BTC" className="h-full w-full object-cover" />
+                 <div className="flex h-6 w-6 items-center justify-center rounded-full ring-1 ring-slate-100 shadow-sm flex-shrink-0 text-sm">
+                   <FontAwesomeIcon icon={faBtc} className="text-amber-500" />
                  </div>
                  <span className="font-mono text-xs font-black uppercase tracking-widest text-slate-500">BTC/USD (Live Feed)</span>
                  <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-600 ring-1 ring-emerald-200/50 uppercase">
