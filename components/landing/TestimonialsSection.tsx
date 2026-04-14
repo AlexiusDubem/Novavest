@@ -6,12 +6,12 @@ import { TestimonialCard } from "@/components/ui/testimonial-cards";
 const testimonials = [
   {
     id: 1,
-    testimonial: "The precision of NovaVest's algorithmic grid is unmatched. Our portfolio ROI expanded by 22% in the first quarter alone.",
+    testimonial: "The precision of GIRDUP's algorithmic grid is unmatched. Our portfolio ROI expanded by 22% in the first quarter alone.",
     author: "Marcello G. - Asset Manager @ FinTech Global"
   },
   {
     id: 2,
-    testimonial: "Integrating our treasury with NovaVest was the best strategic move this year. The 24/7 liquidity pulse is game-changing.", 
+    testimonial: "Integrating our treasury with GIRDUP was the best strategic move this year. The 24/7 liquidity pulse is game-changing.", 
     author: "Elena S. - Risk Analyst @ Credit Suisse"
   },
   {
@@ -44,7 +44,7 @@ export function TestimonialsSection() {
                    Validated by the World's Best.
                 </h2>
                 <p className="text-lg font-bold leading-relaxed text-slate-500">
-                   Join 45,000+ institutional traders who rely on NovaVest for high-frequency asset management and secure treasury growth.
+                   Join 45,000+ institutional traders who rely on GIRDUP for high-frequency asset management and secure treasury growth.
                 </p>
                 <div className="flex items-center gap-8 pt-4">
                    <div>

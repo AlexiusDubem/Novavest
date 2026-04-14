@@ -50,9 +50,9 @@ export default function HowItWorksPage() {
       <main className="pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-foreground mb-4">How NovaVest Works</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-4">How GIRDUP Works</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Get started with NovaVest in just 5 simple steps. From signup to growth, we've made investing straightforward and secure.
+              Get started with GIRDUP in just 5 simple steps. From signup to growth, we've made investing straightforward and secure.
             </p>
           </div>
 
@@ -99,7 +99,7 @@ export default function HowItWorksPage() {
             <div className="bg-card border border-border rounded-lg p-8 max-w-2xl mx-auto">
               <h2 className="text-2xl font-semibold mb-4">Ready to Start Your Journey?</h2>
               <p className="text-muted-foreground mb-6">
-                Join thousands of investors who have already illuminated their financial future with NovaVest.
+                Join thousands of investors who have already illuminated their financial future with GIRDUP.
               </p>
               <div className="flex gap-4 justify-center">
                 <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">

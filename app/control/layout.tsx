@@ -67,7 +67,7 @@ export default function ControlLayout({
 
         <div className="mt-20 flex flex-col items-center gap-2 opacity-30">
            <div className="h-px w-32 bg-slate-200" />
-           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">NovaVest Security Protocol 404</p>
+           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">GIRDUP Security Protocol 404</p>
         </div>
       </div>
     )

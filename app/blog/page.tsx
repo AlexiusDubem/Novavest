@@ -78,7 +78,7 @@ export default function BlogPage() {
       <main className="pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-foreground mb-4">NovaVest Blog</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-4">GIRDUP Blog</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Insights, tips, and analysis to help you navigate the world of investing and cryptocurrency.
             </p>

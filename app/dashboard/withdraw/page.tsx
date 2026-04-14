@@ -50,7 +50,7 @@ export default function WithdrawPage() {
     if (!numericAmount || numericAmount <= 0) {
       await fireAlert({
         title: 'Enter a valid withdrawal amount',
-        text: 'NovaVest needs a valid withdrawal amount before we can create the request.',
+        text: 'GIRDUP needs a valid withdrawal amount before we can create the request.',
         icon: 'error',
         confirmButtonText: 'Continue',
       })
@@ -87,7 +87,7 @@ export default function WithdrawPage() {
     <div className="space-y-6">
       <div>
         <h1 className="mb-2 text-3xl font-bold text-primary">Withdraw Crypto</h1>
-        <p className="text-gray-600">Create a real withdrawal request for NovaVest confirmation and wallet release.</p>
+        <p className="text-gray-600">Create a real withdrawal request for GIRDUP confirmation and wallet release.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -110,7 +110,7 @@ export default function WithdrawPage() {
             <AlertCircle className="mt-0.5 shrink-0 text-yellow-600" size={20} />
             <div className="text-sm">
               <p className="font-semibold text-yellow-900">Confirmation workflow</p>
-              <p className="mt-1 text-yellow-800">Withdrawals stay pending until NovaVest completes the release review.</p>
+              <p className="mt-1 text-yellow-800">Withdrawals stay pending until GIRDUP completes the release review.</p>
             </div>
           </div>
 
@@ -214,7 +214,7 @@ export default function WithdrawPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-gray-600">
-              <p>Requests are reviewed by the NovaVest operations desk.</p>
+              <p>Requests are reviewed by the GIRDUP operations desk.</p>
               <p>Only approved balance can be withdrawn.</p>
               <p>Large withdrawals may require extra compliance review.</p>
             </CardContent>
@@ -230,7 +230,7 @@ export default function WithdrawPage() {
             <CardContent className="space-y-3 text-sm text-gray-600">
               <p>Only withdraw to a supported blockchain wallet you control.</p>
               <p>Always verify network compatibility before confirming.</p>
-              <p>If a request cannot be completed, the NovaVest note will appear here.</p>
+              <p>If a request cannot be completed, the GIRDUP note will appear here.</p>
             </CardContent>
           </Card>
         </div>

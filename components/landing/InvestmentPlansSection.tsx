@@ -111,7 +111,7 @@ export function InvestmentPlansSection() {
               {/* Verified Badge */}
               <div className="mt-8 flex items-center justify-center gap-2 opacity-30 group-hover:opacity-100 transition-opacity">
                  <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">NovaVest Secure Protocol 2.1</span>
+                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">GIRDUP Secure Protocol 2.1</span>
               </div>
             </div>
           ))}

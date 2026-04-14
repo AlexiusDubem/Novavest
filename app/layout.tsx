@@ -9,7 +9,7 @@ import './globals.css'
 config.autoAddCss = false
 
 export const metadata: Metadata = {
-  title: 'NovaVest - Illuminate Your Financial Future',
+  title: 'GIRDUP - Illuminate Your Financial Future',
   description: 'Premium fintech platform for secure investments, crypto-backed loans, and advanced portfolio management. Build wealth with confidence.',
   generator: 'v0.app',
   icons: {
@@ -37,8 +37,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="en" className="overflow-x-hidden">
+      <body className="font-sans antialiased overflow-x-hidden w-full relative">
         <AuthProvider>
           <ThemeProvider attribute="class" forcedTheme="light" enableSystem={false}>
             {children}

@@ -80,7 +80,7 @@ export function HeroSection() {
                   <div className="mx-auto max-w-sm overflow-hidden rounded-[2rem] border border-border bg-background/95 shadow-2xl shadow-slate-950/10">
                     <div className="bg-gradient-to-r from-primary to-cyan-500 px-4 py-3">
                       <div className="flex items-center justify-between text-white">
-                        <span className="text-[11px] uppercase tracking-[0.35em]">NovaInvest</span>
+                        <span className="text-[11px] uppercase tracking-[0.35em]">GIRDUP</span>
                         <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-[10px] font-semibold">
                           Active Plan
                         </span>

@@ -180,7 +180,7 @@ export function MarketSimulationChart({ activeInvestment }: { activeInvestment?:
 
       <div className="flex items-center justify-between border-t border-slate-50 bg-slate-50/30 px-8 py-5 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">
         <div className="flex items-center gap-4">
-           <span className="text-slate-500 font-black">NovaVest Quantum Feed 2.1</span>
+           <span className="text-slate-500 font-black">GIRDUP Quantum Feed 2.1</span>
            <div className="h-1.5 w-1.5 rounded-full bg-slate-200" />
            <span>Latency: 14ms</span>
         </div>

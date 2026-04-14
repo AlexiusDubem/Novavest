@@ -70,7 +70,7 @@ export default function InvestmentPlansPage() {
     if (profile.kycStatus !== 'verified') {
       await fireAlert({
         title: 'Verification needed',
-        text: 'Complete your NovaVest verification before starting a package.',
+        text: 'Complete your GIRDUP verification before starting a package.',
         icon: 'warning',
         confirmButtonText: 'Open verification',
       })
@@ -146,7 +146,7 @@ export default function InvestmentPlansPage() {
       })
       await fireAlert({
         title: 'Package request submitted',
-        text: 'NovaVest will review your request and notify you once approved.',
+        text: 'GIRDUP will review your request and notify you once approved.',
         icon: 'success',
         confirmButtonText: 'OK',
       })

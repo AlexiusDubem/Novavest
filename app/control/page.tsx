@@ -259,7 +259,7 @@ export default function AdminPage() {
               <FontAwesomeIcon icon={faShieldHalved} className="h-8 w-8 text-emerald-400" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">NovaVest Ops v4.2</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">GIRDUP Ops v4.2</p>
               <h1 className="mt-1 text-3xl font-black tracking-tighter text-slate-900">Control Center</h1>
               <div className="mt-2 flex items-center gap-3">
                  <div className="flex -space-x-2">

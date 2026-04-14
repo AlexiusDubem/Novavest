@@ -27,7 +27,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl font-bold text-foreground mb-4">About NovaVest</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-4">About GIRDUP</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               We're on a mission to democratize investing by providing secure, transparent, and accessible financial tools for everyone.
             </p>
@@ -50,7 +50,7 @@ export default function AboutPage() {
               <div>
                 <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
                 <p className="text-muted-foreground mb-4">
-                  At NovaVest, we believe that everyone deserves access to powerful investment tools previously reserved for institutions and wealthy individuals. Our platform combines cutting-edge technology with traditional financial wisdom to create a secure, user-friendly investment experience.
+                  At GIRDUP, we believe that everyone deserves access to powerful investment tools previously reserved for institutions and wealthy individuals. Our platform combines cutting-edge technology with traditional financial wisdom to create a secure, user-friendly investment experience.
                 </p>
                 <p className="text-muted-foreground mb-4">
                   Founded in 2020, we've grown from a small team of fintech enthusiasts to a global platform serving investors across 50+ countries. Our commitment to transparency, security, and innovation drives everything we do.
@@ -111,7 +111,7 @@ export default function AboutPage() {
           <div className="text-center">
             <Card className="bg-card border-border max-w-2xl mx-auto">
               <CardContent className="p-8">
-                <h2 className="text-2xl font-semibold mb-4">Join the NovaVest Community</h2>
+                <h2 className="text-2xl font-semibold mb-4">Join the GIRDUP Community</h2>
                 <p className="text-muted-foreground mb-6">
                   Start your investment journey today and be part of the future of finance.
                 </p>

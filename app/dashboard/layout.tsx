@@ -37,8 +37,8 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const storedPin = localStorage.getItem('novainvest-dashboard-pin')
-    const unlocked = storedPin ? sessionStorage.getItem('novainvest-dashboard-unlocked') === 'true' : true
+    const storedPin = localStorage.getItem('girdup-dashboard-pin')
+    const unlocked = storedPin ? sessionStorage.getItem('girdup-dashboard-unlocked') === 'true' : true
     setSessionUnlocked(unlocked)
   }, [])
 
@@ -101,9 +101,9 @@ export default function DashboardLayout({
 
               <Link
                 href="/dashboard/deposit"
-                className="group inline-flex items-center gap-3 rounded-2xl border border-slate-950 bg-slate-950 px-5 py-3 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:bg-slate-900 sm:px-6 shadow-xl shadow-black/5 active:scale-95"
+                className="group inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-[10px] font-black uppercase tracking-widest text-slate-700 transition-all hover:bg-slate-50 sm:px-6 shadow-sm active:scale-95"
               >
-                <FontAwesomeIcon icon={faWallet} className="text-emerald-400" />
+                <FontAwesomeIcon icon={faWallet} className="text-emerald-500" />
                 <span className="hidden sm:inline">Fund Terminal</span>
               </Link>
             </div>
@@ -191,7 +191,7 @@ export default function DashboardLayout({
                  <h2 className="text-3xl font-black tracking-tighter">Terminal Suspended</h2>
               </div>
               <p className="text-base font-bold leading-relaxed opacity-80">
-                Your institutional access has been restricted by NovaVest security. Support is still accessible for appeal.
+                Your institutional access has been restricted by GIRDUP security. Support is still accessible for appeal.
                 <br /><br />
                 <span className="text-[11px] font-black uppercase tracking-widest text-rose-500">REASON: {profile.suspensionReason || 'Direct restriction / Pending Review'}</span>
               </p>

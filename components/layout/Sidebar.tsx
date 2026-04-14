@@ -79,18 +79,18 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           </button>
         </div>
 
-        <div className="mx-5 mb-4 rounded-[32px] border border-slate-200 bg-slate-950 p-6 shadow-2xl overflow-hidden relative group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-[40px] -mr-10 -mt-10 group-hover:bg-primary/30 transition-all" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-4">Secured ID</p>
+        <div className="mx-5 mb-4 rounded-[32px] border border-slate-200 bg-slate-50 p-6 shadow-sm overflow-hidden relative group transition-shadow hover:shadow-md">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-[40px] -mr-10 -mt-10 group-hover:bg-emerald-500/10 transition-all" />
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-4">Secured ID</p>
           <div className="flex items-center justify-between relative z-10">
             <div className="min-w-0">
-              <p className="break-all text-2xl font-black tracking-tighter text-white leading-none">{profile?.portfolioId ?? 'NV-000'}</p>
+              <p className="break-all text-2xl font-black tracking-tighter text-slate-900 leading-none">{profile?.portfolioId ?? 'NV-000'}</p>
               <div className="mt-3 flex items-center gap-2">
-                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                 <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400/80">{profile?.investmentPackage ?? 'Active Mandate'}</p>
+                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                 <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600/80">{profile?.investmentPackage ?? 'Active Mandate'}</p>
               </div>
             </div>
-            <div className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary">
+            <div className="h-12 w-12 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-emerald-600">
                <FontAwesomeIcon icon={faUserCheck} />
             </div>
           </div>

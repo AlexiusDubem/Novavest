@@ -1,9 +1,9 @@
 'use client'
 
 export const STORAGE_KEYS = {
-  onboardingPending: 'novavest-onboarding-pending',
-  onboardingComplete: 'novavest-onboarding-complete',
-  wallets: 'novavest-wallets',
+  onboardingPending: 'girdup-onboarding-pending',
+  onboardingComplete: 'girdup-onboarding-complete',
+  wallets: 'girdup-wallets',
 } as const
 
 export interface SavedWallet {

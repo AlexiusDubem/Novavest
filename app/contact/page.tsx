@@ -13,7 +13,7 @@ import { faEnvelope, faPhone, faMapMarkerAlt, faClock } from '@fortawesome/free-
 
 const faqs = [
   {
-    question: 'How do I get started with NovaVest?',
+    question: 'How do I get started with GIRDUP?',
     answer: 'Sign up for a free account, complete KYC verification, deposit funds, and choose your investment plan. Our onboarding process takes just 10-15 minutes.'
   },
   {
@@ -146,7 +146,7 @@ export default function ContactPage() {
                     <FontAwesomeIcon icon={faEnvelope} className="text-primary" />
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="text-muted-foreground">support@novavest.com</p>
+                      <p className="text-muted-foreground">support@girdup.com</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">

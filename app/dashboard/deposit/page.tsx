@@ -13,7 +13,7 @@ import { fireAlert } from '@/lib/alerts'
 import { createDepositRequest, subscribeToDeposits } from '@/lib/firebase/firestore'
 import type { DepositRequest } from '@/lib/firebase/types'
 
-// Official NovaVest funding wallet addresses
+// Official GIRDUP funding wallet addresses
 const COMPANY_WALLETS = [
   {
     id: 'btc',
@@ -117,7 +117,7 @@ export default function DepositPage() {
       setCryptoAmount('')
       await fireAlert({
         title: 'Deposit intent saved',
-        text: `NovaVest has been notified of your ${cryptoAmount} ${selectedAsset.symbol} transfer (${formatCurrency(usdValue)}). Please send the funds if you haven't already.`,
+        text: `GIRDUP has been notified of your ${cryptoAmount} ${selectedAsset.symbol} transfer (${formatCurrency(usdValue)}). Please send the funds if you haven't already.`,
         icon: 'success',
         confirmButtonText: 'OK',
       })
@@ -140,7 +140,7 @@ export default function DepositPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Fund Workspace</h1>
           <p className="mt-2 max-w-2xl text-base font-medium text-slate-500 leading-relaxed">
-            Choose a live mandate channel, fulfill the transfer, and notify the NovaVest treasury for confirmation.
+            Choose a live mandate channel, fulfill the transfer, and notify the GIRDUP treasury for confirmation.
           </p>
         </div>
 
@@ -159,7 +159,7 @@ export default function DepositPage() {
         <Card className="dashboard-card overflow-hidden border-slate-200/60 bg-white rounded-[32px] p-0">
           <CardHeader className="p-6 pb-2">
             <CardTitle className="text-lg font-bold text-slate-900">Mandate Channels</CardTitle>
-            <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-widest">NovaVest Treasury Gateways</CardDescription>
+            <CardDescription className="text-xs font-medium text-slate-400 uppercase tracking-widest">GIRDUP Treasury Gateways</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 p-6 pt-4">
             {COMPANY_WALLETS.map((asset) => (
@@ -269,7 +269,7 @@ export default function DepositPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Fulfillment Commitment</p>
-                <p className="text-xs font-medium text-slate-400">Input the exact volume of {selectedAsset?.symbol} dispatched. NovaVest calculates high-water mark conversion in real-time.</p>
+                <p className="text-xs font-medium text-slate-400">Input the exact volume of {selectedAsset?.symbol} dispatched. GIRDUP calculates high-water mark conversion in real-time.</p>
               </div>
 
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">

@@ -78,7 +78,7 @@ export default function LoginPage() {
               <BrandLogo href="/" light subtitle="Investor Platform" />
             </div>
             <p className="text-sm uppercase tracking-[0.32em] text-cyan-300">Secure Investor Access</p>
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Login to NovaVest</h1>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Login to GIRDUP</h1>
             <p className="mt-4 text-sm leading-6 text-slate-300 sm:text-base">
               Sign in to access your live portfolio, wallet activity, and investment workspace.
             </p>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                 </Button>
 
                 <div className="text-center text-sm text-slate-400">
-                  New to NovaVest?{' '}
+                  New to GIRDUP?{' '}
                   <Link href="/signup" className="font-semibold text-white hover:text-cyan-300">
                     Create an account
                   </Link>
@@ -168,7 +168,7 @@ export default function LoginPage() {
                 </div>
                 <div className="rounded-3xl bg-white/5 p-4">
                   <p className="text-sm text-slate-300">Protected access</p>
-                  <p className="mt-2 text-lg font-semibold text-white">Each account opens the right NovaVest workspace automatically after sign-in.</p>
+                  <p className="mt-2 text-lg font-semibold text-white">Each account opens the right GIRDUP workspace automatically after sign-in.</p>
                 </div>
                 <div className="rounded-3xl bg-white/5 p-4">
                   <p className="text-sm text-slate-300">New-user ready</p>

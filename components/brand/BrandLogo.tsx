@@ -34,7 +34,7 @@ export function BrandLogo({
       </div>
       {!compact && (
         <div className="leading-none">
-          <p className={`text-2xl font-semibold tracking-tight ${textPrimary}`}>NovaVest</p>
+          <p className={`text-2xl font-semibold tracking-tight ${textPrimary}`}>GIRDUP</p>
           <p className={`mt-1 text-[11px] uppercase tracking-[0.32em] ${textSecondary}`}>{subtitle}</p>
         </div>
       )}

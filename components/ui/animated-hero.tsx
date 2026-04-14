@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MoveRight, PhoneCall } from "lucide-react";
+import { MoveRight, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function Hero() {
@@ -34,7 +34,7 @@ function Hero() {
           </div>
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-7xl max-w-4xl tracking-tighter text-center font-black text-slate-900 leading-[1.1]">
-              <span className="block text-slate-500/80">NovaVest is</span>
+              <span className="block text-slate-500/80">GIRDUP is</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
                 <AnimatePresence mode="wait">
@@ -63,7 +63,7 @@ function Hero() {
           </div>
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
             <Button size="lg" className="gap-4 rounded-2xl h-16 px-10 border-slate-200 text-slate-900 font-black uppercase tracking-widest text-xs" variant="outline">
-              Request a demo <PhoneCall className="w-4 h-4 text-emerald-500" />
+              Explore Mandates <TrendingUp className="w-4 h-4 text-emerald-500" />
             </Button>
             <Button size="lg" className="gap-4 rounded-2xl h-16 px-10 bg-slate-950 text-white font-black uppercase tracking-widest text-xs shadow-2xl">
               Get Started <MoveRight className="w-4 h-4 text-emerald-400" />
