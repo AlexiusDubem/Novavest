@@ -1,15 +1,52 @@
 'use client'
 
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Checkbox } from '@/components/ui/checkbox'
+import { useAuth } from '@/hooks/use-auth'
+import { fireAlert } from '@/lib/alerts'
+import { formatCurrency, formatDateTime } from '@/lib/formatters'
+import {
+  adjustUserBalance,
+  createSupportedAsset,
+  createUserNotification,
+  deleteSupportedAsset,
+  setDepositRequestStatus,
+  setInvestmentRequestStatus,
+  setKycSubmissionStatus,
+  setLoanRequestStatus,
+  setUserAccountStatus,
+  setWithdrawalRequestStatus,
+  subscribeToAllDeposits,
+  subscribeToAllInvestmentRequests,
+  subscribeToAllKycSubmissions,
+  subscribeToAllLoans,
+  subscribeToAllSupportedAssets,
+  subscribeToAllUsers,
+  subscribeToAllWithdrawals,
+  updateSupportedAsset,
+} from '@/lib/firebase/firestore'
+import type {
+  DepositRequest,
+  InvestmentRequestRecord,
+  KycSubmission,
+  LoanRequest,
+  SupportedAsset,
+  UserProfile,
+  WithdrawalRequest,
+} from '@/lib/firebase/types'
 import { UserDirectory } from '@/components/admin/UserDirectory'
 import { RequestQueues } from '@/components/admin/RequestQueues'
 import { AdminTools } from '@/components/admin/AdminTools'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotate, faDashboard, faShieldHalved, faUsers, faListCheck, faWrench, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState, type ReactNode } from 'react'
-import { useAuth } from '@/hooks/use-auth'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { UserProfile, DepositRequest, WithdrawalRequest, LoanRequest, KycSubmission, InvestmentRequestRecord, SupportedAsset } from '@/lib/firebase/types'
+
+type ReviewType = 'deposit' | 'withdrawal' | 'loan' | 'kyc' | 'investment'
+
 
 export default function AdminPage() {
   const router = useRouter()

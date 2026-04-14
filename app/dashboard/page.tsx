@@ -3,7 +3,9 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { MarketSimulationChart } from '@/components/dashboard/MarketSimulationChart'
+import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
+import { fireAlert } from '@/lib/alerts'
 import { formatCurrency, formatDateTime } from '@/lib/formatters'
 import { subscribeToInvestments, subscribeToTransactions, subscribeToWallets } from '@/lib/firebase/firestore'
 import type { InvestmentRecord, TransactionRecord, WalletRecord } from '@/lib/firebase/types'
@@ -20,6 +22,20 @@ import {
   faClock,
 } from '@fortawesome/free-solid-svg-icons'
 import { faBtc, faEthereum } from '@fortawesome/free-brands-svg-icons'
+
+function formatCountdown(investment: InvestmentRecord) {
+  if (!investment.startedAt) return 'Pending...'
+  const started = investment.startedAt.toDate().getTime()
+  const duration = investment.termDays * 24 * 60 * 60 * 1000
+  const endTime = started + duration
+  const remaining = endTime - Date.now()
+  if (remaining <= 0) return 'Completed'
+  const days = Math.floor(remaining / (24 * 60 * 60 * 1000))
+  const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000))
+  const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000))
+  const seconds = Math.floor((remaining % (60 * 1000)) / 1000)
+  return `${days}d ${hours}h ${minutes}m ${seconds}s`
+}
 
 const actions = [
   { label: 'Fund Wallet', icon: faWallet, href: '/dashboard/deposit', description: 'Send funds to a live wallet and notify NovaVest once payment is made.' },
