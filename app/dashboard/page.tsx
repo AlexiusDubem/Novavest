@@ -1,11 +1,21 @@
+'use client'
+
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { MarketSimulationChart } from '@/components/dashboard/MarketSimulationChart'
+import { useAuth } from '@/hooks/use-auth'
+import { formatCurrency, formatDateTime } from '@/lib/formatters'
+import { subscribeToInvestments, subscribeToTransactions, subscribeToWallets } from '@/lib/firebase/firestore'
+import type { InvestmentRecord, TransactionRecord, WalletRecord } from '@/lib/firebase/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faWallet,
   faShoppingBag,
   faCreditCard,
   faRefresh,
-  faArrowDownLeft,
-  faArrowUpRight,
+  faArrowDown,
+  faArrowUp,
+  faArrowRight,
   faCopy,
   faClock,
 } from '@fortawesome/free-solid-svg-icons'
@@ -125,7 +135,7 @@ export default function DashboardPage() {
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600/70">Aggregate Funding</p>
             <div className="mt-4 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 shadow-sm">
-                <FontAwesomeIcon icon={faArrowDownLeft} />
+                <FontAwesomeIcon icon={faArrowDown} />
               </div>
               <p className="text-2xl font-black tracking-tighter text-emerald-600 truncate">{formatCurrency(completedDeposits)}</p>
             </div>
@@ -134,7 +144,7 @@ export default function DashboardPage() {
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-rose-600/70">Aggregate Exits</p>
             <div className="mt-4 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-600 shadow-sm">
-                <FontAwesomeIcon icon={faArrowUpRight} />
+                <FontAwesomeIcon icon={faArrowUp} />
               </div>
               <p className="text-2xl font-black tracking-tighter text-rose-600 truncate">{formatCurrency(completedWithdrawals)}</p>
             </div>
@@ -272,7 +282,7 @@ export default function DashboardPage() {
                   <p className="truncate font-mono text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">{wallet.network} • {wallet.address.slice(0, 10)}...</p>
                 </div>
                 <div className="h-10 w-10 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-primary transition-colors">
-                   <FontAwesomeIcon icon={faArrowUpRight} className="h-4 w-4" />
+                   <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4" />
                 </div>
               </Link>
             ))}

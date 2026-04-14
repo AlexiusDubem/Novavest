@@ -1,8 +1,15 @@
+'use client'
+
 import { UserDirectory } from '@/components/admin/UserDirectory'
 import { RequestQueues } from '@/components/admin/RequestQueues'
 import { AdminTools } from '@/components/admin/AdminTools'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotate, faDashboard, faShieldHalved, faUsers, faListCheck, faWrench, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState, type ReactNode } from 'react'
+import { useAuth } from '@/hooks/use-auth'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type { UserProfile, DepositRequest, WithdrawalRequest, LoanRequest, KycSubmission, InvestmentRequestRecord, SupportedAsset } from '@/lib/firebase/types'
 
 export default function AdminPage() {
   const router = useRouter()
@@ -388,17 +395,6 @@ function MetricCard({ label, value, warn }: { label: string; value: string; warn
         <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">{label}</p>
         <p className={`mt-3 text-4xl font-black tracking-tighter ${warn ? 'text-rose-600' : 'text-slate-900'}`}>{value}</p>
         <div className={`mt-4 h-1 w-12 rounded-full ${warn ? 'bg-rose-500' : 'bg-slate-100'}`} />
-      </CardContent>
-    </Card>
-  )
-}
-
-function MetricCard({ label, value }: { label: string; value: string }) {
-  return (
-    <Card className="rounded-[24px] border-slate-200">
-      <CardContent className="pt-6">
-        <p className="text-sm text-slate-500">{label}</p>
-        <p className="mt-2 text-3xl font-bold text-slate-950">{value}</p>
       </CardContent>
     </Card>
   )

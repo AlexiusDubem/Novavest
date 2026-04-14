@@ -1,3 +1,17 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { OnboardingGuide } from '@/components/dashboard/OnboardingGuide'
+import { SessionLock } from '@/components/dashboard/SessionLock'
+import { Sidebar } from '@/components/layout/Sidebar'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/hooks/use-auth'
+import { signOutUser } from '@/lib/firebase/auth'
+import { subscribeToNotifications, markNotificationRead } from '@/lib/firebase/firestore'
+import { formatDateTime } from '@/lib/formatters'
+import type { NotificationRecord } from '@/lib/firebase/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBars,
