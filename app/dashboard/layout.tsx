@@ -85,7 +85,7 @@ export default function DashboardLayout({
   const isSuspended = profile.accountStatus === 'suspended'
 
   return (
-    <div className="flex min-h-screen bg-[#f8fafc] text-foreground selection:bg-primary/10">
+    <div className="flex min-h-screen overflow-x-hidden bg-[#f8fafc] text-foreground selection:bg-primary/10">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col lg:pl-[290px]">
@@ -195,7 +195,7 @@ export default function DashboardLayout({
                 <br /><br />
                 <span className="text-[11px] font-black uppercase tracking-widest text-rose-500">REASON: {profile.suspensionReason || 'Direct restriction / Pending Review'}</span>
               </p>
-              <Button className="mt-8 h-12 rounded-2xl bg-slate-950 px-8 text-[10px] font-black uppercase tracking-widest shadow-xl" onClick={() => router.push('/dashboard/support')}>
+              <Button className="mt-8 h-12 rounded-2xl bg-slate-100 px-8 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:bg-white shadow-xl" onClick={() => router.push('/dashboard/support')}>
                 Establish Support Link
               </Button>
             </div>

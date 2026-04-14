@@ -210,7 +210,7 @@ export default function DepositPage() {
                             fireAlert({ title: 'Address Copied', text: 'Wallet address secured in clipboard.', icon: 'success' })
                           }
                         }}
-                        className="mt-4 h-11 w-full rounded-xl bg-slate-950 text-xs font-black uppercase tracking-widest text-white transition active:scale-95 group"
+                        className="mt-4 h-11 w-full rounded-xl bg-emerald-600 text-xs font-black uppercase tracking-widest text-white transition hover:bg-emerald-700 active:scale-95 group"
                         disabled={!selectedAsset?.address}
                       >
                         <Copy className="mr-2 h-4 w-4 transition group-hover:rotate-12" />
@@ -248,7 +248,7 @@ export default function DepositPage() {
                        className="h-32 w-32 object-contain opacity-40 transition group-hover:opacity-100 group-hover:scale-105 grayscale hover:grayscale-0"
                      />
                      <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
-                        <div className="rounded-full bg-slate-950/80 px-4 py-1.5 backdrop-blur-md">
+                        <div className="rounded-full bg-emerald-600/90 px-4 py-1.5 backdrop-blur-md">
                            <p className="text-[9px] font-black uppercase tracking-widest text-white">Scan Token</p>
                         </div>
                      </div>

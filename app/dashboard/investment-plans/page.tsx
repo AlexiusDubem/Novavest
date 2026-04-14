@@ -207,11 +207,11 @@ export default function InvestmentPlansPage() {
                 <p className="text-xs font-medium leading-relaxed text-slate-400">{plan.description}</p>
                 
                 <Button 
-                  onClick={() => handleInvest(plan)} 
-                  className="h-14 w-full rounded-2xl bg-slate-950 text-xs font-black uppercase tracking-widest text-white transition active:scale-[0.98]" 
-                  disabled={submitting}
+                  onClick={() => handleInvest(plan)}
+                  disabled={isProcessing === plan.id}
+                  className="h-14 w-full rounded-2xl bg-emerald-600 text-xs font-black uppercase tracking-widest text-white transition hover:bg-emerald-700 active:scale-[0.98]" 
                 >
-                  Initialize Mandate
+                  {isProcessing === plan.id ? 'Authorizing...' : 'Initialize Mandate'}
                 </Button>
               </CardContent>
             </Card>
@@ -257,9 +257,9 @@ export default function InvestmentPlansPage() {
                             <h3 className="text-4xl font-black tracking-tighter text-slate-900">{investment.planName}</h3>
                           </div>
                         </div>
-                        <div className="inline-flex items-center gap-4 rounded-[24px] bg-slate-950 px-6 py-4 text-sm font-bold text-white shadow-2xl shadow-slate-200">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
-                             <Timer size={16} className="text-primary" />
+                        <div className="inline-flex items-center gap-4 rounded-[24px] bg-slate-50 border border-slate-100 px-6 py-4 text-sm font-bold text-slate-900 shadow-sm">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100/50">
+                             <Timer size={16} className="text-emerald-600" />
                           </div>
                           <div className="space-y-0.5">
                             <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">Time Remaining</p>

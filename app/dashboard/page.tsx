@@ -139,7 +139,7 @@ export default function DashboardPage() {
 
           <button
             onClick={handleCopyId}
-            className="group inline-flex w-full items-center justify-center gap-3 rounded-[24px] border border-slate-200 bg-white px-8 py-5 text-[11px] font-black uppercase tracking-widest text-slate-700 transition duration-300 hover:bg-slate-950 hover:text-white hover:border-slate-950 active:scale-95 sm:w-auto"
+            className="group inline-flex w-full items-center justify-center gap-3 rounded-[24px] border border-slate-200 bg-white px-8 py-5 text-[11px] font-black uppercase tracking-widest text-slate-700 transition duration-300 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 active:scale-95 sm:w-auto"
           >
             <FontAwesomeIcon icon={faCopy} className={`h-4 w-4 transition-transform ${copied ? 'scale-125 text-emerald-400' : 'text-primary'}`} />
             {copied ? 'Copied to Ledger' : 'Secure Portfolio ID'}
