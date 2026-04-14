@@ -101,7 +101,7 @@ export function AdminTools({
 
           <Button 
             onClick={onAdjustBalance} 
-            className="h-14 w-full rounded-2xl bg-slate-950 text-[11px] font-black uppercase tracking-[0.25em] text-white shadow-xl transition active:scale-95" 
+            className="h-14 w-full rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-[11px] font-black uppercase tracking-[0.25em] text-white shadow-xl transition active:scale-95" 
             disabled={adjusting}
           >
             {adjusting ? 'Processing Ledger...' : 'Commit Balance Adjustment'}
@@ -161,7 +161,7 @@ export function AdminTools({
 
           <Button 
             onClick={onSendNotification} 
-            className="h-14 w-full rounded-2xl bg-slate-950 text-[11px] font-black uppercase tracking-[0.25em] text-white shadow-xl transition active:scale-95" 
+            className="h-14 w-full rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-[11px] font-black uppercase tracking-[0.25em] text-white shadow-xl transition active:scale-95" 
             disabled={sendingNotification}
           >
             {sendingNotification ? 'Broadcasting...' : 'Execute Pulse Notification'}

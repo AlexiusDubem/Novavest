@@ -54,7 +54,7 @@ export default function ControlLayout({
         </p>
 
         <div className="mt-10 flex flex-col gap-3 min-w-[240px]">
-          <Button asChild className="h-14 rounded-2xl bg-slate-950 text-xs font-black uppercase tracking-widest text-white shadow-xl transition active:scale-95">
+          <Button asChild className="h-14 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-xs font-black uppercase tracking-widest text-white shadow-xl transition active:scale-95">
             <Link href="/dashboard">
               <Home className="mr-2 h-4 w-4" />
               Return to Workspace

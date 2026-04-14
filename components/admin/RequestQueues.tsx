@@ -75,7 +75,7 @@ export function RequestQueues({ title, items, type, onReview }: RequestQueuesPro
                 <Button 
                   size="sm" 
                   onClick={() => onReview(type, item.id, 'approved')} 
-                  className="h-11 flex-1 lg:flex-none rounded-2xl bg-slate-950 px-6 text-[10px] font-black uppercase tracking-[0.2em] transition active:scale-95 shadow-lg shadow-black/10"
+                  className="h-11 flex-1 lg:flex-none rounded-2xl bg-emerald-600 hover:bg-emerald-700 px-6 text-[10px] font-black uppercase tracking-[0.2em] transition active:scale-95 shadow-lg shadow-emerald-600/10"
                   disabled={item.status !== 'pending'}
                 >
                   <FontAwesomeIcon icon={faCheck} className="mr-2 h-3.5 w-3.5" />

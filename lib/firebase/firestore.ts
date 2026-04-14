@@ -59,7 +59,7 @@ function mapSnapshot<T extends { id: string }>(
 }
 
 function portfolioIdFromUid(uid: string) {
-  return `NV-${uid.slice(0, 6).toUpperCase()}`
+  return `GD-${uid.slice(0, 6).toUpperCase()}`
 }
 
 export async function createUserProfile(user: User, payload: SignupPayload) {

@@ -15,6 +15,7 @@ import {
   createSupportedAsset,
   createUserNotification,
   deleteSupportedAsset,
+  seedAdminCollectionsIfMissing,
   setDepositRequestStatus,
   setInvestmentRequestStatus,
   setKycSubmissionStatus,
@@ -43,7 +44,7 @@ import { UserDirectory } from '@/components/admin/UserDirectory'
 import { RequestQueues } from '@/components/admin/RequestQueues'
 import { AdminTools } from '@/components/admin/AdminTools'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotate, faDashboard, faShieldHalved, faUsers, faListCheck, faWrench, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faRotate, faDashboard, faShieldHalved, faUsers, faListCheck, faWrench, faArrowLeft, faXmark, faWallet } from '@fortawesome/free-solid-svg-icons'
 
 type ReviewType = 'deposit' | 'withdrawal' | 'loan' | 'kyc' | 'investment'
 
@@ -255,8 +256,8 @@ export default function AdminPage() {
         {/* Institutional Header */}
         <section className="rounded-[40px] border border-slate-200 bg-white p-8 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="flex gap-6 items-center">
-            <div className="h-20 w-20 rounded-[32px] bg-slate-950 flex items-center justify-center text-white shadow-2xl">
-              <FontAwesomeIcon icon={faShieldHalved} className="h-8 w-8 text-emerald-400" />
+            <div className="h-20 w-20 rounded-[32px] bg-emerald-600 flex items-center justify-center text-white shadow-xl">
+              <FontAwesomeIcon icon={faShieldHalved} className="h-8 w-8 text-white" />
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">GIRDUP Ops v4.2</p>
@@ -280,7 +281,7 @@ export default function AdminPage() {
                Reset BTC/ETH Wallets
              </Button>
              <Button 
-               className="rounded-2xl h-12 px-6 bg-slate-950 text-[10px] font-black uppercase tracking-widest transition active:scale-95"
+               className="rounded-2xl h-12 px-6 bg-emerald-600 text-[10px] font-black uppercase tracking-widest transition hover:bg-emerald-700 active:scale-95"
                onClick={() => router.push('/dashboard')}
              >
                <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
@@ -292,11 +293,11 @@ export default function AdminPage() {
         <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
           <div className="overflow-x-auto pb-4 no-scrollbar">
             <TabsList className="inline-flex h-14 items-center rounded-2xl bg-white p-1 shadow-sm ring-1 ring-slate-200">
-              <TabsTrigger value="overview" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+              <TabsTrigger value="overview" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
                 <FontAwesomeIcon icon={faDashboard} />
                 Overview
               </TabsTrigger>
-              <TabsTrigger value="requests" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white relative">
+              <TabsTrigger value="requests" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white relative">
                 <FontAwesomeIcon icon={faListCheck} />
                 Requests
                 {Object.values(pendingCounts).reduce((a, b) => a + b, 0) > 0 && (
@@ -305,15 +306,15 @@ export default function AdminPage() {
                   </span>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="assets" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+              <TabsTrigger value="assets" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
                 <FontAwesomeIcon icon={faWallet} />
                 Assets
               </TabsTrigger>
-              <TabsTrigger value="users" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+              <TabsTrigger value="users" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
                 <FontAwesomeIcon icon={faUsers} />
                 Users
               </TabsTrigger>
-              <TabsTrigger value="tools" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+              <TabsTrigger value="tools" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
                 <FontAwesomeIcon icon={faWrench} />
                 Sys Tools
               </TabsTrigger>
@@ -354,7 +355,7 @@ export default function AdminPage() {
                       <Input placeholder="Network" value={assetForm.network} onChange={(event) => setAssetForm({ ...assetForm, network: event.target.value })} className="h-12 rounded-xl bg-white" />
                       <Input placeholder="Address" value={assetForm.address} onChange={(event) => setAssetForm({ ...assetForm, address: event.target.value })} className="h-12 rounded-xl bg-white md:col-span-2" />
                       <Input placeholder="Public Instruction Note" value={assetForm.note} onChange={(event) => setAssetForm({ ...assetForm, note: event.target.value })} className="h-12 rounded-xl bg-white md:col-span-4" />
-                      <Button onClick={handleCreateAsset} className="h-12 bg-slate-950 text-[10px] font-black uppercase tracking-widest rounded-xl" disabled={savingAsset}>
+                      <Button onClick={handleCreateAsset} className="h-12 bg-emerald-600 hover:bg-emerald-700 text-[10px] font-black uppercase tracking-widest rounded-xl transition active:scale-95" disabled={savingAsset}>
                          Deploy Asset
                       </Button>
                    </div>
