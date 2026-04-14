@@ -1,51 +1,13 @@
-'use client'
-
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useAuth } from '@/hooks/use-auth'
-import { fireAlert } from '@/lib/alerts'
-import { formatCurrency, formatDateTime } from '@/lib/formatters'
-import {
-  adjustUserBalance,
-  createSupportedAsset,
-  createUserNotification,
-  deleteSupportedAsset,
-  seedAdminCollectionsIfMissing,
-  setDepositRequestStatus,
-  setInvestmentRequestStatus,
-  setKycSubmissionStatus,
-  setLoanRequestStatus,
-  setUserAccountStatus,
-  setWithdrawalRequestStatus,
-  subscribeToAllDeposits,
-  subscribeToAllInvestmentRequests,
-  subscribeToAllKycSubmissions,
-  subscribeToAllLoans,
-  subscribeToAllSupportedAssets,
-  subscribeToAllUsers,
-  subscribeToAllWithdrawals,
-  updateSupportedAsset,
-} from '@/lib/firebase/firestore'
-import type {
-  DepositRequest,
-  InvestmentRequestRecord,
-  KycSubmission,
-  LoanRequest,
-  SupportedAsset,
-  UserProfile,
-  WithdrawalRequest,
-} from '@/lib/firebase/types'
-
-type ReviewType = 'deposit' | 'withdrawal' | 'loan' | 'kyc' | 'investment'
+import { UserDirectory } from '@/components/admin/UserDirectory'
+import { RequestQueues } from '@/components/admin/RequestQueues'
+import { AdminTools } from '@/components/admin/AdminTools'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRotate, faDashboard, faShieldHalved, faUsers, faListCheck, faWrench, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 export default function AdminPage() {
   const router = useRouter()
   const { user, isAdmin, loading } = useAuth()
+  const [activeTab, setActiveTab] = useState('overview')
   const [users, setUsers] = useState<UserProfile[]>([])
   const [deposits, setDeposits] = useState<DepositRequest[]>([])
   const [withdrawals, setWithdrawals] = useState<WithdrawalRequest[]>([])
@@ -53,6 +15,7 @@ export default function AdminPage() {
   const [kycItems, setKycItems] = useState<KycSubmission[]>([])
   const [investmentRequests, setInvestmentRequests] = useState<InvestmentRequestRecord[]>([])
   const [assets, setAssets] = useState<SupportedAsset[]>([])
+  
   const [assetForm, setAssetForm] = useState({
     symbol: '',
     name: '',
@@ -110,7 +73,7 @@ export default function AdminPage() {
   async function review(type: ReviewType, requestId: string, status: 'approved' | 'rejected') {
     if (!user) return
     const note = status === 'rejected'
-      ? window.prompt('Optional reason:') ?? ''
+      ? window.prompt('Optional reason for rejection:') ?? ''
       : ''
 
     try {
@@ -119,6 +82,13 @@ export default function AdminPage() {
       if (type === 'loan') await setLoanRequestStatus(requestId, status, user.uid, note)
       if (type === 'kyc') await setKycSubmissionStatus(requestId, status, user.uid, note)
       if (type === 'investment') await setInvestmentRequestStatus(requestId, status, user.uid, note)
+      
+      await fireAlert({
+        title: 'Action complete',
+        text: `Request has been marked as ${status}.`,
+        icon: 'success',
+        confirmButtonText: 'Done',
+      })
     } catch (error) {
       await fireAlert({
         title: 'Action failed',
@@ -129,69 +99,36 @@ export default function AdminPage() {
     }
   }
 
+  // (Helper functions handleCreateAsset, handleRestoreCoreAssets, handleToggleAsset, etc. remain here or moved to separate file)
+  // I'll keep them here for now to avoid too many files, but scoped properly.
+
   async function handleCreateAsset() {
     if (Object.values(assetForm).some((value) => !value)) {
-      await fireAlert({
-        title: 'Complete the asset form',
-        text: 'Symbol, name, network, address, and note are all required.',
-        icon: 'error',
-        confirmButtonText: 'Continue',
-      })
+      await fireAlert({ title: 'Complete the asset form', text: 'All fields are required.', icon: 'error', confirmButtonText: 'Continue' })
       return
     }
-
     try {
       setSavingAsset(true)
       await createSupportedAsset(assetForm)
       setAssetForm({ symbol: '', name: '', network: '', address: '', note: '' })
-      await fireAlert({
-        title: 'Funding asset saved',
-        text: 'The wallet method is now available in the live workspace.',
-        icon: 'success',
-        confirmButtonText: 'Done',
-      })
+      await fireAlert({ title: 'Saved', text: 'Funding asset is now live.', icon: 'success', confirmButtonText: 'Done' })
     } catch (error) {
-      await fireAlert({
-        title: 'Unable to create asset',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    } finally {
-      setSavingAsset(false)
-    }
+      await fireAlert({ title: 'Error', text: error instanceof Error ? error.message : 'Try again.', icon: 'error', confirmButtonText: 'Retry' })
+    } finally { setSavingAsset(false) }
   }
 
   async function handleRestoreCoreAssets() {
     try {
       await seedAdminCollectionsIfMissing()
-      await fireAlert({
-        title: 'Core wallet methods restored',
-        text: 'BTC and ETH funding routes have been refreshed.',
-        icon: 'success',
-        confirmButtonText: 'Done',
-      })
+      await fireAlert({ title: 'Restored', text: 'BTC/ETH wallets refreshed.', icon: 'success', confirmButtonText: 'Done' })
     } catch (error) {
-      await fireAlert({
-        title: 'Unable to restore core wallets',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
+      await fireAlert({ title: 'Error', text: 'Check connection.', icon: 'error', confirmButtonText: 'Retry' })
     }
   }
 
   async function handleToggleAsset(asset: SupportedAsset) {
-    try {
-      await updateSupportedAsset(asset.id, { isActive: !asset.isActive })
-    } catch (error) {
-      await fireAlert({
-        title: 'Unable to update asset',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    }
+    try { await updateSupportedAsset(asset.id, { isActive: !asset.isActive }) } 
+    catch (error) { await fireAlert({ title: 'Sync Error', text: 'Firebase error.', icon: 'error', confirmButtonText: 'Retry' }) }
   }
 
   async function handleEditAsset(asset: SupportedAsset) {
@@ -199,435 +136,260 @@ export default function AdminPage() {
     if (address === null) return
     const note = window.prompt(`Update user note for ${asset.symbol}`, asset.note)
     if (note === null) return
-
-    try {
-      await updateSupportedAsset(asset.id, { address, note })
-    } catch (error) {
-      await fireAlert({
-        title: 'Unable to edit asset',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    }
+    try { await updateSupportedAsset(asset.id, { address, note }) } 
+    catch (error) { await fireAlert({ title: 'Edit Error', text: 'Check settings.', icon: 'error', confirmButtonText: 'Retry' }) }
   }
 
   async function handleDeleteAsset(asset: SupportedAsset) {
     if (!window.confirm(`Delete ${asset.symbol}?`)) return
-
-    try {
-      await deleteSupportedAsset(asset.id)
-    } catch (error) {
-      await fireAlert({
-        title: 'Unable to delete asset',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    }
+    try { await deleteSupportedAsset(asset.id) } 
+    catch (error) { await fireAlert({ title: 'Delete Error', text: 'Check permissions.', icon: 'error', confirmButtonText: 'Retry' }) }
   }
 
   async function handleAdjustBalance() {
     if (!adjustUserId || !adjustAmount) {
-      await fireAlert({
-        title: 'Enter a user and amount',
-        text: 'Choose a user account and enter the amount to adjust.',
-        icon: 'error',
-        confirmButtonText: 'Continue',
-      })
+      await fireAlert({ title: 'Details missing', text: 'Choose a user and amount.', icon: 'error', confirmButtonText: 'Continue' })
       return
     }
-
     const amount = Number(adjustAmount)
     if (Number.isNaN(amount) || amount === 0) {
-      await fireAlert({
-        title: 'Enter a valid amount',
-        text: 'The balance adjustment must be a non-zero number.',
-        icon: 'error',
-        confirmButtonText: 'Continue',
-      })
+      await fireAlert({ title: 'Invalid amount', text: 'Non-zero number required.', icon: 'error', confirmButtonText: 'Continue' })
       return
     }
-
     try {
       setAdjusting(true)
       await adjustUserBalance(adjustUserId, amount, adjustNote)
-      setAdjustUserId('')
-      setAdjustAmount('')
-      setAdjustNote('')
-      await fireAlert({
-        title: 'Balance updated',
-        text: 'The account ledger has been refreshed.',
-        icon: 'success',
-        confirmButtonText: 'Done',
-      })
+      setAdjustUserId(''); setAdjustAmount(''); setAdjustNote('')
+      await fireAlert({ title: 'Success', text: 'Account credit confirmed.', icon: 'success', confirmButtonText: 'Done' })
     } catch (error) {
-      await fireAlert({
-        title: 'Unable to adjust balance',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    } finally {
-      setAdjusting(false)
-    }
+       await fireAlert({ title: 'Adjustment failed', text: error instanceof Error ? error.message : 'Try again.', icon: 'error', confirmButtonText: 'Retry' })
+    } finally { setAdjusting(false) }
   }
 
   async function handleSendNotification() {
     if (!notificationTitle || !notificationMessage) {
-      await fireAlert({
-        title: 'Complete the notification form',
-        text: 'Enter both a title and message.',
-        icon: 'error',
-        confirmButtonText: 'Continue',
-      })
+      await fireAlert({ title: 'Form incomplete', text: 'Title and message are required.', icon: 'error', confirmButtonText: 'Continue' })
       return
     }
-
-    if (!sendToAllUsers && !notificationUserId) {
-      await fireAlert({
-        title: 'Choose a user or select all users',
-        text: 'Choose a user or check "Send to all users".',
-        icon: 'error',
-        confirmButtonText: 'Continue',
-      })
-      return
-    }
-
     try {
       setSendingNotification(true)
-      console.log('Sending notification - sendToAllUsers:', sendToAllUsers, 'users count:', users.length)
       if (sendToAllUsers) {
-        // Send to all users
-        console.log('Sending to all users...')
-        const promises = users.map((user) =>
-          createUserNotification(user.id, {
-            title: notificationTitle,
-            message: notificationMessage,
-            type: 'info',
-            link: '/dashboard',
-          })
-        )
+        const promises = users.map((user) => createUserNotification(user.id, { title: notificationTitle, message: notificationMessage, type: 'info', link: '/dashboard' }))
         await Promise.all(promises)
-        console.log('All notifications sent successfully')
       } else {
-        // Send to specific user
-        console.log('Sending to specific user:', notificationUserId)
-        await createUserNotification(notificationUserId, {
-          title: notificationTitle,
-          message: notificationMessage,
-          type: 'info',
-          link: '/dashboard',
-        })
-        console.log('Single notification sent successfully')
+        if (!notificationUserId) throw new Error('Choose a recipient.')
+        await createUserNotification(notificationUserId, { title: notificationTitle, message: notificationMessage, type: 'info', link: '/dashboard' })
       }
-      setNotificationUserId('')
-      setNotificationTitle('')
-      setNotificationMessage('')
-      setSendToAllUsers(false)
+      setNotificationUserId(''); setNotificationTitle(''); setNotificationMessage(''); setSendToAllUsers(false)
+      await fireAlert({ title: 'Broadcast complete', text: 'Messages sent to recipients.', icon: 'success', confirmButtonText: 'Done' })
     } catch (error) {
-      await fireAlert({
-        title: 'Unable to send notification',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    } finally {
-      setSendingNotification(false)
-    }
+      await fireAlert({ title: 'Sync error', text: error instanceof Error ? error.message : 'Try again.', icon: 'error', confirmButtonText: 'Retry' })
+    } finally { setSendingNotification(false) }
   }
 
   async function handleToggleSuspension(entry: UserProfile) {
     const nextStatus = entry.accountStatus === 'suspended' ? 'active' : 'suspended'
     const reason = nextStatus === 'suspended' ? window.prompt('Reason for restriction:') ?? '' : ''
-
-    try {
-      await setUserAccountStatus(entry.id, nextStatus, reason)
-    } catch (error) {
-      await fireAlert({
-        title: 'Unable to update account status',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-      })
-    }
+    try { await setUserAccountStatus(entry.id, nextStatus, reason) } 
+    catch (error) { await fireAlert({ title: 'Sync Error', text: 'Update failed.', icon: 'error', confirmButtonText: 'Retry' }) }
   }
 
   if (loading || !user || !isAdmin) {
-    return <div className="flex min-h-screen items-center justify-center px-6 text-slate-600">Loading control center...</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-slate-900" />
+          <p className="text-xs font-black uppercase tracking-[0.25em] text-slate-400">Syncing Control Center...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#eef4ff_0%,#f8fbff_45%,#ffffff_100%)] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <section className="rounded-[32px] border border-slate-200 bg-white/90 p-6 shadow-sm sm:p-8">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <main className="min-h-screen bg-[#f8fafc] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-6 pb-20">
+        {/* Institutional Header */}
+        <section className="rounded-[40px] border border-slate-200 bg-white p-8 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div className="flex gap-6 items-center">
+            <div className="h-20 w-20 rounded-[32px] bg-slate-950 flex items-center justify-center text-white shadow-2xl">
+              <FontAwesomeIcon icon={faShieldHalved} className="h-8 w-8 text-emerald-400" />
+            </div>
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">NovaVest Control Center</p>
-              <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Live operations and approvals</h1>
-              <p className="mt-2 max-w-3xl text-slate-600">
-                Confirm funding, withdrawals, KYC, loans, investment packages, and account restrictions from one workspace.
-              </p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">NovaVest Ops v4.2</p>
+              <h1 className="mt-1 text-3xl font-black tracking-tighter text-slate-900">Control Center</h1>
+              <div className="mt-2 flex items-center gap-3">
+                 <div className="flex -space-x-2">
+                    {[1,2,3].map(i => <div key={i} className="h-6 w-6 rounded-full border-2 border-white bg-slate-200" />)}
+                 </div>
+                 <p className="text-xs font-bold text-slate-500">{users.length} Active Workspaces Managed</p>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Button variant="outline" onClick={handleRestoreCoreAssets}>Restore BTC / ETH Wallets</Button>
-              <Button variant="outline" onClick={() => router.push('/dashboard')}>Back to dashboard</Button>
-            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 flex-wrap">
+             <Button 
+               variant="outline" 
+               className="rounded-2xl h-12 px-6 border-slate-200 text-[10px] font-black uppercase tracking-widest"
+               onClick={handleRestoreCoreAssets}
+             >
+               <FontAwesomeIcon icon={faRotate} className="mr-2" />
+               Reset BTC/ETH Wallets
+             </Button>
+             <Button 
+               className="rounded-2xl h-12 px-6 bg-slate-950 text-[10px] font-black uppercase tracking-widest transition active:scale-95"
+               onClick={() => router.push('/dashboard')}
+             >
+               <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+               Back to Workspace
+             </Button>
           </div>
         </section>
 
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="requests">Requests</TabsTrigger>
-            <TabsTrigger value="assets">Assets</TabsTrigger>
-            <TabsTrigger value="users">Users</TabsTrigger>
-            <TabsTrigger value="tools">Tools</TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
+          <div className="overflow-x-auto pb-4 no-scrollbar">
+            <TabsList className="inline-flex h-14 items-center rounded-2xl bg-white p-1 shadow-sm ring-1 ring-slate-200">
+              <TabsTrigger value="overview" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+                <FontAwesomeIcon icon={faDashboard} />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="requests" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white relative">
+                <FontAwesomeIcon icon={faListCheck} />
+                Requests
+                {Object.values(pendingCounts).reduce((a, b) => a + b, 0) > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[8px] font-black text-white outline outline-2 outline-white">
+                    {Object.values(pendingCounts).reduce((a, b) => a + b, 0)}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="assets" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+                <FontAwesomeIcon icon={faWallet} />
+                Assets
+              </TabsTrigger>
+              <TabsTrigger value="users" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+                <FontAwesomeIcon icon={faUsers} />
+                Users
+              </TabsTrigger>
+              <TabsTrigger value="tools" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-slate-950 data-[state=active]:text-white">
+                <FontAwesomeIcon icon={faWrench} />
+                Sys Tools
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="overview" className="space-y-6 mt-6">
-            <section className="grid gap-4 md:grid-cols-5">
-              <MetricCard label="Users" value={String(users.length)} />
-              <MetricCard label="Pending deposits" value={String(pendingCounts.deposits)} />
-              <MetricCard label="Pending withdrawals" value={String(pendingCounts.withdrawals)} />
-              <MetricCard label="Pending KYC" value={String(pendingCounts.kyc)} />
-              <MetricCard label="Pending packages" value={String(pendingCounts.investments)} />
-            </section>
+          <TabsContent value="overview" className="space-y-6 mt-6 focus-visible:outline-none">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+              <MetricCard label="Portfolios" value={String(users.length)} />
+              <MetricCard label="Liquidity Review" value={String(pendingCounts.deposits)} warn={pendingCounts.deposits > 0} />
+              <MetricCard label="Exits Pending" value={String(pendingCounts.withdrawals)} warn={pendingCounts.withdrawals > 0} />
+              <MetricCard label="Identity Review" value={String(pendingCounts.kyc)} warn={pendingCounts.kyc > 0} />
+              <MetricCard label="Mandates" value={String(pendingCounts.investments)} warn={pendingCounts.investments > 0} />
+            </div>
           </TabsContent>
 
-          <TabsContent value="assets" className="space-y-6 mt-6">
-            <Card className="rounded-[28px] border-slate-200">
-              <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <CardTitle>Funding methods</CardTitle>
-                  <p className="text-sm text-slate-500">Manage the wallet routes users see on the funding screen.</p>
-                </div>
-                <div className="text-sm text-slate-500">Core live wallets: BTC and ETH</div>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                <div className="grid gap-3 md:grid-cols-5">
-                  <Input placeholder="Symbol" value={assetForm.symbol} onChange={(event) => setAssetForm({ ...assetForm, symbol: event.target.value.toUpperCase() })} />
-                  <Input placeholder="Name" value={assetForm.name} onChange={(event) => setAssetForm({ ...assetForm, name: event.target.value })} />
-                  <Input placeholder="Network" value={assetForm.network} onChange={(event) => setAssetForm({ ...assetForm, network: event.target.value })} />
-                  <Input placeholder="Address" value={assetForm.address} onChange={(event) => setAssetForm({ ...assetForm, address: event.target.value })} />
-                  <Input placeholder="User note" value={assetForm.note} onChange={(event) => setAssetForm({ ...assetForm, note: event.target.value })} />
-                </div>
-                <Button onClick={handleCreateAsset} className="bg-primary text-white hover:bg-primary/90" disabled={savingAsset}>
-                  {savingAsset ? 'Saving...' : 'Add Funding Method'}
-                </Button>
+          <TabsContent value="requests" className="space-y-6 mt-6 focus-visible:outline-none">
+            <RequestQueues title="Mandate Activations" items={investmentRequests} type="investment" onReview={review} />
+            <RequestQueues title="Treasury Funding notices" items={deposits} type="deposit" onReview={review} />
+            <RequestQueues title="Liquidity Exit requests" items={withdrawals} type="withdrawal" onReview={review} />
+            
+            <div className="grid xl:grid-cols-2 gap-6">
+               <RequestQueues title="Strategic Capital" items={loans} type="loan" onReview={review} />
+               <RequestQueues title="Verification Queue" items={kycItems} type="kyc" onReview={review} />
+            </div>
+          </TabsContent>
 
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {assets.map((asset) => (
-                    <div key={asset.id} className="rounded-[24px] border border-slate-200 bg-slate-50/80 p-5">
-                      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="min-w-0">
-                          <p className="text-lg font-semibold text-slate-950">{asset.symbol} · {asset.name}</p>
-                          <p className="mt-1 text-sm text-slate-500">{asset.network}</p>
-                          <p className="mt-3 break-all rounded-2xl bg-white px-4 py-3 font-mono text-xs text-slate-600">{asset.address}</p>
-                          <p className="mt-3 text-sm text-slate-600">{asset.note}</p>
-                        </div>
-                        <div className="flex flex-col items-start gap-2 sm:items-end">
-                          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${asset.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}`}>
-                            {asset.isActive ? 'Live' : 'Hidden'}
-                          </span>
-                          <div className="flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline" onClick={() => handleToggleAsset(asset)}>
-                              {asset.isActive ? 'Hide' : 'Activate'}
-                            </Button>
-                            <Button size="sm" variant="outline" onClick={() => handleEditAsset(asset)}>Edit</Button>
-                            <Button size="sm" variant="outline" onClick={() => handleDeleteAsset(asset)}>Delete</Button>
+          <TabsContent value="assets" className="space-y-6 mt-6 focus-visible:outline-none">
+             <Card className="rounded-[28px] border-slate-200 overflow-hidden">
+                <CardHeader className="bg-slate-50/50 border-b border-slate-100 py-8 px-10">
+                   <CardTitle className="text-xl font-bold">Treasury Gateway</CardTitle>
+                   <p className="text-sm text-slate-500">Enable or modify public cryptocurrency funding routes.</p>
+                </CardHeader>
+                <CardContent className="p-10 space-y-10">
+                   <div className="grid gap-4 md:grid-cols-5 bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner">
+                      <Input placeholder="SYMBOL" value={assetForm.symbol} onChange={(event) => setAssetForm({ ...assetForm, symbol: event.target.value.toUpperCase() })} className="h-12 rounded-xl bg-white" />
+                      <Input placeholder="Label" value={assetForm.name} onChange={(event) => setAssetForm({ ...assetForm, name: event.target.value })} className="h-12 rounded-xl bg-white" />
+                      <Input placeholder="Network" value={assetForm.network} onChange={(event) => setAssetForm({ ...assetForm, network: event.target.value })} className="h-12 rounded-xl bg-white" />
+                      <Input placeholder="Address" value={assetForm.address} onChange={(event) => setAssetForm({ ...assetForm, address: event.target.value })} className="h-12 rounded-xl bg-white md:col-span-2" />
+                      <Input placeholder="Public Instruction Note" value={assetForm.note} onChange={(event) => setAssetForm({ ...assetForm, note: event.target.value })} className="h-12 rounded-xl bg-white md:col-span-4" />
+                      <Button onClick={handleCreateAsset} className="h-12 bg-slate-950 text-[10px] font-black uppercase tracking-widest rounded-xl" disabled={savingAsset}>
+                         Deploy Asset
+                      </Button>
+                   </div>
+
+                   <div className="grid gap-6 lg:grid-cols-2">
+                      {assets.map((asset) => (
+                        <div key={asset.id} className="group relative rounded-[32px] border border-slate-200 bg-white p-8 transition-all hover:border-emerald-500/30">
+                          <div className="flex flex-col gap-6 sm:flex-row sm:items-start justify-between">
+                            <div>
+                               <div className="flex items-center gap-3">
+                                  <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-900 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                                     {asset.symbol.slice(0, 2)}
+                                  </div>
+                                  <div>
+                                     <p className="font-black text-slate-900">{asset.name}</p>
+                                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{asset.network}</p>
+                                  </div>
+                               </div>
+                               <p className="mt-4 break-all rounded-2xl bg-slate-50 px-4 py-3 font-mono text-[11px] text-slate-600 border border-slate-100">
+                                  {asset.address}
+                               </p>
+                            </div>
+                            <div className="flex flex-col items-end gap-4">
+                               <span className={`rounded-full px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] ${asset.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}`}>
+                                 {asset.isActive ? 'Active' : 'Offline'}
+                               </span>
+                               <div className="flex items-center gap-2">
+                                  <Button size="sm" variant="outline" className="h-9 w-9 p-0 rounded-xl" onClick={() => handleToggleAsset(asset)} title="Toggle Status">
+                                     <FontAwesomeIcon icon={faRotate} className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button size="sm" variant="outline" className="h-9 px-4 rounded-xl text-[9px] font-black uppercase tracking-widest" onClick={() => handleEditAsset(asset)}>Edit</Button>
+                                  <Button size="sm" variant="outline" className="h-9 w-9 p-0 rounded-xl text-rose-500 hover:bg-rose-50 border-rose-100" onClick={() => handleDeleteAsset(asset)}>
+                                     <FontAwesomeIcon icon={faXmark} className="h-3.5 w-3.5" />
+                                  </Button>
+                               </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="tools" className="space-y-6 mt-6">
-            <section className="grid gap-6 xl:grid-cols-2">
-              <Card className="rounded-[28px] border-slate-200">
-                <CardHeader>
-                  <CardTitle>Ledger controls</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-3 md:grid-cols-3">
-                    <select value={adjustUserId} onChange={(event) => setAdjustUserId(event.target.value)} className="w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-slate-900 outline-none">
-                      <option value="">Choose a user</option>
-                      {users.map((entry) => (
-                        <option key={entry.id} value={entry.id}>
-                          {entry.firstName} {entry.lastName} - {entry.email}
-                        </option>
                       ))}
-                    </select>
-                    <Input type="number" placeholder="Amount" value={adjustAmount} onChange={(event) => setAdjustAmount(event.target.value)} />
-                    <Input placeholder="Memo" value={adjustNote} onChange={(event) => setAdjustNote(event.target.value)} />
-                  </div>
-                  <Button onClick={handleAdjustBalance} className="bg-primary text-white hover:bg-primary/90" disabled={adjusting}>
-                    {adjusting ? 'Updating...' : 'Apply Balance Adjustment'}
-                  </Button>
+                   </div>
                 </CardContent>
-              </Card>
-
-              <Card className="rounded-[28px] border-slate-200">
-                <CardHeader>
-                  <CardTitle>Broadcast notification</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="sendToAll"
-                      checked={sendToAllUsers}
-                      onCheckedChange={(checked) => setSendToAllUsers(checked as boolean)}
-                    />
-                    <label htmlFor="sendToAll" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                      Send to all users
-                    </label>
-                  </div>
-                  <div className="grid gap-3 md:grid-cols-3">
-                    <select
-                      value={notificationUserId}
-                      onChange={(event) => setNotificationUserId(event.target.value)}
-                      disabled={sendToAllUsers}
-                      className="w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-slate-900 outline-none disabled:opacity-50"
-                    >
-                      <option value="">Choose a user</option>
-                      {users.map((entry) => (
-                        <option key={entry.id} value={entry.id}>
-                          {entry.firstName} {entry.lastName} - {entry.email}
-                        </option>
-                      ))}
-                    </select>
-                    <Input placeholder="Title" value={notificationTitle} onChange={(event) => setNotificationTitle(event.target.value)} />
-                    <Input placeholder="Message" value={notificationMessage} onChange={(event) => setNotificationMessage(event.target.value)} />
-                  </div>
-                  <Button onClick={handleSendNotification} className="bg-primary text-white hover:bg-primary/90" disabled={sendingNotification}>
-                    {sendingNotification ? 'Sending...' : 'Send Notification'}
-                  </Button>
-                </CardContent>
-              </Card>
-            </section>
+             </Card>
           </TabsContent>
 
-          <TabsContent value="requests" className="space-y-6 mt-6">
-            <QueueCard title="Investment package requests" empty="No package requests yet.">
-              {investmentRequests.map((item) => (
-                <ReviewRow
-                  key={item.id}
-                  title={item.planName}
-                  subtitle={`${formatCurrency(item.amount)} • ${item.termDays} days • ${item.roiPercent}% ROI`}
-                  meta={`${formatDateTime(item.createdAt)} • user ${item.userId}`}
-                  status={item.status}
-                  onApprove={() => review('investment', item.id, 'approved')}
-                  onReject={() => review('investment', item.id, 'rejected')}
-                />
-              ))}
-            </QueueCard>
-
-            <QueueCard title="Deposit confirmations" empty="No deposit confirmations yet.">
-              {deposits.map((item) => (
-                <ReviewRow
-                  key={item.id}
-                  title={`${item.assetSymbol} funding notice`}
-                  subtitle={`${formatCurrency(item.expectedAmount)} • ${item.network}`}
-                  meta={`${formatDateTime(item.createdAt)} • user ${item.userId}`}
-                  status={item.status}
-                  onApprove={() => review('deposit', item.id, 'approved')}
-                  onReject={() => review('deposit', item.id, 'rejected')}
-                />
-              ))}
-            </QueueCard>
-
-            <QueueCard title="Withdrawal requests" empty="No withdrawal requests yet.">
-              {withdrawals.map((item) => (
-                <ReviewRow
-                  key={item.id}
-                  title={item.walletName}
-                  subtitle={`${formatCurrency(item.amount)} • fee ${formatCurrency(item.fee)}`}
-                  meta={`${formatDateTime(item.createdAt)} • user ${item.userId}`}
-                  status={item.status}
-                  onApprove={() => review('withdrawal', item.id, 'approved')}
-                  onReject={() => review('withdrawal', item.id, 'rejected')}
-                />
-              ))}
-            </QueueCard>
-
-            <section className="grid gap-6 xl:grid-cols-2">
-              <QueueCard title="Loan requests" empty="No loan requests yet.">
-                {loans.map((item) => (
-                  <ReviewRow
-                    key={item.id}
-                    title={`${formatCurrency(item.amount)} loan`}
-                    subtitle={`${item.termMonths} months • ${item.purpose}`}
-                    meta={`${formatDateTime(item.createdAt)} • user ${item.userId}`}
-                    status={item.status}
-                    onApprove={() => review('loan', item.id, 'approved')}
-                    onReject={() => review('loan', item.id, 'rejected')}
-                  />
-                ))}
-              </QueueCard>
-
-              <QueueCard title="KYC submissions" empty="No KYC submissions yet.">
-                {kycItems.map((item) => (
-                  <ReviewRow
-                    key={item.id}
-                    title={`${item.fullName} • level ${item.level}`}
-                    subtitle={`${item.documentType} • ${item.documentNumber}`}
-                    meta={`${formatDateTime(item.createdAt)} • user ${item.userId}`}
-                    status={item.status}
-                    onApprove={() => review('kyc', item.id, 'approved')}
-                    onReject={() => review('kyc', item.id, 'rejected')}
-                  />
-                ))}
-              </QueueCard>
-            </section>
+          <TabsContent value="users" className="focus-visible:outline-none">
+             <UserDirectory users={users} onToggleSuspension={handleToggleSuspension} />
           </TabsContent>
 
-          <TabsContent value="users" className="space-y-6 mt-6">
-            <Card className="rounded-[28px] border-slate-200">
-              <CardHeader>
-                <CardTitle>User directory</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[760px]">
-                    <thead>
-                      <tr className="border-b border-slate-200">
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-600">Name</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-600">Email</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-slate-600">Status</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-slate-600">Balance</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-slate-600">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users.map((entry) => (
-                        <tr key={entry.id} className="border-b border-slate-100">
-                          <td className="px-4 py-4 text-sm text-slate-900">{entry.firstName} {entry.lastName}</td>
-                          <td className="px-4 py-4 text-sm text-slate-700">{entry.email}</td>
-                          <td className="px-4 py-4 text-sm text-slate-700">
-                            <div className="capitalize">{entry.role}</div>
-                            <div className="text-xs text-slate-500">{entry.accountStatus}</div>
-                          </td>
-                          <td className="px-4 py-4 text-right text-sm font-semibold text-slate-900">{formatCurrency(entry.balance)}</td>
-                          <td className="px-4 py-4 text-right">
-                            <Button size="sm" variant="outline" onClick={() => handleToggleSuspension(entry)}>
-                              {entry.accountStatus === 'suspended' ? 'Restore' : 'Suspend'}
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="tools" className="focus-visible:outline-none">
+             <AdminTools 
+               users={users}
+               adjustUserId={adjustUserId} setAdjustUserId={setAdjustUserId}
+               adjustAmount={adjustAmount} setAdjustAmount={setAdjustAmount}
+               adjustNote={adjustNote} setAdjustNote={setAdjustNote}
+               onAdjustBalance={handleAdjustBalance}
+               adjusting={adjusting}
+               notificationUserId={notificationUserId} setNotificationUserId={setNotificationUserId}
+               notificationTitle={notificationTitle} setNotificationTitle={setNotificationTitle}
+               notificationMessage={notificationMessage} setNotificationMessage={setNotificationMessage}
+               sendToAllUsers={sendToAllUsers} setSendToAllUsers={setSendToAllUsers}
+               onSendNotification={handleSendNotification}
+               sendingNotification={sendingNotification}
+             />
           </TabsContent>
         </Tabs>
       </div>
     </main>
+  )
+}
+
+function MetricCard({ label, value, warn }: { label: string; value: string; warn?: boolean }) {
+  return (
+    <Card className={`rounded-[32px] border-slate-200 transition-all ${warn ? 'bg-rose-50/50 border-rose-100 shadow-[0_0_20px_rgba(244,63,94,0.05)]' : 'bg-white'}`}>
+      <CardContent className="pt-6 pb-8 px-8">
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">{label}</p>
+        <p className={`mt-3 text-4xl font-black tracking-tighter ${warn ? 'text-rose-600' : 'text-slate-900'}`}>{value}</p>
+        <div className={`mt-4 h-1 w-12 rounded-full ${warn ? 'bg-rose-500' : 'bg-slate-100'}`} />
+      </CardContent>
+    </Card>
   )
 }
 

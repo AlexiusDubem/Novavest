@@ -677,11 +677,11 @@ export async function adjustUserBalance(userId: string, amount: number, note: st
 
   await createTransactionRecord({
     userId,
-    type: 'adjustment',
+    type: amount >= 0 ? 'deposit' : 'adjustment',
     amount,
     status: 'completed',
-    title: amount >= 0 ? 'Balance credit' : 'Balance debit',
-    description: note || 'NovaVest balance adjustment',
+    title: amount >= 0 ? 'Deposit confirmed' : 'Balance debit',
+    description: note || (amount >= 0 ? 'Direct account funding by NovaVest' : 'NovaVest balance adjustment'),
   })
 
   await createUserNotification(userId, {
