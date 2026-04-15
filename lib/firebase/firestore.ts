@@ -226,6 +226,18 @@ export async function markNotificationRead(notificationId: string) {
   })
 }
 
+export async function deleteNotification(notificationId: string) {
+  const { deleteDoc } = await import('firebase/firestore')
+  await deleteDoc(doc(notificationsCollection(), notificationId))
+}
+
+export async function clearAllNotifications(uid: string, notificationIds: string[]) {
+  const { deleteDoc } = await import('firebase/firestore')
+  await Promise.all(
+    notificationIds.map((id) => deleteDoc(doc(notificationsCollection(), id)))
+  )
+}
+
 export async function deleteSupportedAsset(assetId: string) {
   const { deleteDoc } = await import('firebase/firestore')
   await deleteDoc(doc(supportedAssetsCollection(), assetId))

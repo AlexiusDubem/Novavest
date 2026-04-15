@@ -9,7 +9,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import { signOutUser } from '@/lib/firebase/auth'
-import { subscribeToNotifications, markNotificationRead } from '@/lib/firebase/firestore'
+import { subscribeToNotifications, markNotificationRead, deleteNotification, clearAllNotifications } from '@/lib/firebase/firestore'
 import { formatDateTime } from '@/lib/formatters'
 import type { NotificationRecord } from '@/lib/firebase/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -156,29 +156,50 @@ export default function DashboardLayout({
                 </button>
                 {showNotifications && (
                   <div className="fixed right-4 top-20 w-[calc(100vw-32px)] max-w-[340px] rounded-[32px] border border-slate-200 bg-white shadow-2xl z-50 overflow-hidden ring-1 ring-black/5 sm:w-80 transition-all animate-in fade-in slide-in-from-top-2">
-                    <div className="bg-slate-50/50 p-5 border-b border-slate-100 flex items-center justify-between">
-                      <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Intelligence Brief</h3>
-                      <span className="text-[9px] font-black uppercase bg-slate-950 text-white px-2 py-0.5 rounded-full">{notifications.length}</span>
+                    <div className="bg-slate-50/50 p-4 border-b border-slate-100 flex items-center justify-between gap-2">
+                      <div>
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Notifications</h3>
+                        <p className="text-[9px] text-slate-400 font-bold mt-0.5">{notifications.filter(n => !n.read).length} unread</p>
+                      </div>
+                      {notifications.length > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => Promise.all(notifications.filter(n => !n.read).map(n => markNotificationRead(n.id)))}
+                            className="text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition px-2 py-1 rounded-lg hover:bg-slate-100"
+                          >Mark read</button>
+                          <button
+                            onClick={() => clearAllNotifications(user!.uid, notifications.map(n => n.id))}
+                            className="text-[9px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-700 transition px-2 py-1 rounded-lg hover:bg-rose-50"
+                          >Clear all</button>
+                        </div>
+                      )}
                     </div>
                     <div className="max-h-[360px] overflow-y-auto no-scrollbar">
                       {notifications.length === 0 ? (
-                        <div className="p-10 text-center text-slate-400 italic text-[11px] font-bold">No data alerts detected in this cycle.</div>
+                        <div className="p-10 text-center text-slate-400 italic text-[11px] font-bold">No notifications.</div>
                       ) : (
                         notifications.map(notification => (
-                          <div key={notification.id} className={`p-5 border-b border-slate-50 last:border-b-0 transition ${!notification.read ? 'bg-emerald-50/30' : 'hover:bg-slate-50'}`}>
-                            <div className="flex justify-between items-start gap-4">
+                          <div key={notification.id} className={`p-4 border-b border-slate-50 last:border-b-0 transition ${!notification.read ? 'bg-emerald-50/30' : 'hover:bg-slate-50'}`}>
+                            <div className="flex justify-between items-start gap-3">
                               <div className="flex-1 min-w-0">
-                                <p className="font-black text-xs text-slate-900 uppercase tracking-tight">{notification.title}</p>
-                                <p className="text-[11px] font-bold text-slate-500 mt-1.5 leading-relaxed">{notification.message}</p>
+                                {!notification.read && <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 mb-1" />}
+                                <p className="font-black text-xs text-slate-900 uppercase tracking-tight leading-tight">{notification.title}</p>
+                                <p className="text-[11px] font-medium text-slate-500 mt-1 leading-relaxed">{notification.message}</p>
                               </div>
-                              {!notification.read && (
+                              <div className="flex flex-col gap-1 flex-shrink-0">
+                                {!notification.read && (
+                                  <button
+                                    onClick={() => markNotificationRead(notification.id)}
+                                    title="Mark as read"
+                                    className="h-6 w-6 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 transition hover:bg-emerald-500 hover:text-white text-[10px] font-black"
+                                  >✓</button>
+                                )}
                                 <button
-                                  onClick={() => markNotificationRead(notification.id)}
-                                  className="flex-shrink-0 h-6 w-6 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 transition hover:bg-emerald-500 hover:text-white"
-                                >
-                                  <FontAwesomeIcon icon={faSearch} className="h-2.5 w-2.5" />
-                                </button>
-                              )}
+                                  onClick={() => deleteNotification(notification.id)}
+                                  title="Delete"
+                                  className="h-6 w-6 rounded-lg bg-rose-50 flex items-center justify-center text-rose-400 transition hover:bg-rose-500 hover:text-white text-[10px] font-black"
+                                >✕</button>
+                              </div>
                             </div>
                           </div>
                         ))
