@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description: 'Premium fintech platform for secure investments, crypto-backed loans, and advanced portfolio management. Build wealth with confidence.',
   generator: 'v0.app',
   icons: {
-    icon: '/logo-icon.png',
-    apple: '/logo-icon.png',
+    icon: '/logo.png',
+    apple: '/logo.png',
   },
 }
 

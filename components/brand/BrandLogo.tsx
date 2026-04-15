@@ -21,8 +21,8 @@ export function BrandLogo({
 
   return (
     <Link href={href} className={`flex items-center gap-3 ${className}`.trim()}>
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center object-contain overflow-visible p-0.5">
-         <img src="/logo-icon.png" alt="BoldWave Logo" className="h-full w-full object-contain" />
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center object-contain overflow-visible p-0.5">
+         <img src="/logo.png" alt="BoldWave Logo" className="h-full w-full object-contain" />
       </div>
       {!compact && (
         <div className="leading-none">
