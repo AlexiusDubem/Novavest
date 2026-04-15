@@ -42,6 +42,30 @@ export default function DashboardLayout({
     setSessionUnlocked(unlocked)
   }, [])
 
+  // Inactivity timeout — lock after 10 minutes
+  useEffect(() => {
+    if (!sessionUnlocked) return
+    const TIMEOUT_MS = 10 * 60 * 1000
+    let timer: ReturnType<typeof setTimeout>
+
+    function resetTimer() {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        sessionStorage.removeItem('BOLDWAVE-dashboard-unlocked')
+        setSessionUnlocked(false)
+      }, TIMEOUT_MS)
+    }
+
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart']
+    events.forEach((e) => window.addEventListener(e, resetTimer))
+    resetTimer()
+
+    return () => {
+      clearTimeout(timer)
+      events.forEach((e) => window.removeEventListener(e, resetTimer))
+    }
+  }, [sessionUnlocked])
+
   useEffect(() => {
     if (!loading && !user && pathname.startsWith('/dashboard')) {
       router.replace('/login')
@@ -131,7 +155,7 @@ export default function DashboardLayout({
                   )}
                 </button>
                 {showNotifications && (
-                  <div className="absolute right-0 top-full mt-4 w-[calc(100vw-32px)] max-w-[340px] rounded-[32px] border border-slate-200 bg-white shadow-2xl z-50 overflow-hidden ring-1 ring-black/5 sm:w-80 transition-all animate-in fade-in slide-in-from-top-2">
+                  <div className="fixed right-4 top-20 w-[calc(100vw-32px)] max-w-[340px] rounded-[32px] border border-slate-200 bg-white shadow-2xl z-50 overflow-hidden ring-1 ring-black/5 sm:w-80 transition-all animate-in fade-in slide-in-from-top-2">
                     <div className="bg-slate-50/50 p-5 border-b border-slate-100 flex items-center justify-between">
                       <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Intelligence Brief</h3>
                       <span className="text-[9px] font-black uppercase bg-slate-950 text-white px-2 py-0.5 rounded-full">{notifications.length}</span>

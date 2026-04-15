@@ -122,7 +122,7 @@ service cloud.firestore {
         && request.resource.data.message == resource.data.message
         && request.resource.data.type == resource.data.type
       );
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
     }
 
     match /supportTickets/{ticketId} {
@@ -132,7 +132,14 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.status == 'Open'
       );
-      allow update, delete: if isAdmin();
+      // Allow users to add replies to their own tickets; admin can do anything
+      allow update: if isAdmin() || (
+        signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.status == resource.data.status
+      );
+      allow delete: if isAdmin();
     }
 
     match /investmentRequests/{requestId} {

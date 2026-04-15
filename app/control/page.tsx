@@ -27,6 +27,7 @@ import {
   subscribeToAllKycSubmissions,
   subscribeToAllLoans,
   subscribeToAllSupportedAssets,
+  subscribeToAllSupportTickets,
   subscribeToAllUsers,
   subscribeToAllWithdrawals,
   updateSupportedAsset,
@@ -37,12 +38,14 @@ import type {
   KycSubmission,
   LoanRequest,
   SupportedAsset,
+  SupportTicketRecord,
   UserProfile,
   WithdrawalRequest,
 } from '@/lib/firebase/types'
 import { UserDirectory } from '@/components/admin/UserDirectory'
 import { RequestQueues } from '@/components/admin/RequestQueues'
 import { AdminTools } from '@/components/admin/AdminTools'
+import { SupportInbox } from '@/components/admin/SupportInbox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotate, faDashboard, faShieldHalved, faUsers, faListCheck, faWrench, faArrowLeft, faXmark, faWallet } from '@fortawesome/free-solid-svg-icons'
 
@@ -60,6 +63,7 @@ export default function AdminPage() {
   const [kycItems, setKycItems] = useState<KycSubmission[]>([])
   const [investmentRequests, setInvestmentRequests] = useState<InvestmentRequestRecord[]>([])
   const [assets, setAssets] = useState<SupportedAsset[]>([])
+  const [supportTickets, setSupportTickets] = useState<SupportTicketRecord[]>([])
   
   const [assetForm, setAssetForm] = useState({
     symbol: '',
@@ -95,6 +99,7 @@ export default function AdminPage() {
     const stopKyc = subscribeToAllKycSubmissions(setKycItems)
     const stopInvestments = subscribeToAllInvestmentRequests(setInvestmentRequests)
     const stopAssets = subscribeToAllSupportedAssets(setAssets)
+    const stopTickets = subscribeToAllSupportTickets(setSupportTickets)
 
     return () => {
       stopUsers()
@@ -104,6 +109,7 @@ export default function AdminPage() {
       stopKyc()
       stopInvestments()
       stopAssets()
+      stopTickets()
     }
   }, [isAdmin, user])
 
@@ -314,6 +320,15 @@ export default function AdminPage() {
                 <FontAwesomeIcon icon={faUsers} />
                 Users
               </TabsTrigger>
+              <TabsTrigger value="support" className="relative flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+                <FontAwesomeIcon icon={faWrench} />
+                Support
+                {supportTickets.filter((t) => t.status === 'Open').length > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[8px] font-black text-white outline outline-2 outline-white">
+                    {supportTickets.filter((t) => t.status === 'Open').length}
+                  </span>
+                )}
+              </TabsTrigger>
               <TabsTrigger value="tools" className="flex items-center gap-2 rounded-xl px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
                 <FontAwesomeIcon icon={faWrench} />
                 Sys Tools
@@ -402,6 +417,10 @@ export default function AdminPage() {
 
           <TabsContent value="users" className="focus-visible:outline-none">
              <UserDirectory users={users} onToggleSuspension={handleToggleSuspension} />
+          </TabsContent>
+
+          <TabsContent value="support" className="focus-visible:outline-none mt-6">
+            <SupportInbox tickets={supportTickets} />
           </TabsContent>
 
           <TabsContent value="tools" className="focus-visible:outline-none">

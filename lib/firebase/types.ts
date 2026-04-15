@@ -80,6 +80,14 @@ export interface NotificationRecord {
   updatedAt?: Timestamp | null
 }
 
+export interface TicketReply {
+  id: string
+  authorRole: 'user' | 'admin'
+  authorName: string
+  message: string
+  createdAt?: Timestamp | null
+}
+
 export interface SupportTicketRecord {
   id: string
   userId: string
@@ -88,6 +96,7 @@ export interface SupportTicketRecord {
   message: string
   priority: 'Normal' | 'High' | 'Urgent'
   status: 'Open' | 'Resolved'
+  replies?: TicketReply[]
   createdAt?: Timestamp | null
   updatedAt?: Timestamp | null
 }

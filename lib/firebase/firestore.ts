@@ -235,24 +235,58 @@ export function subscribeToSupportTickets(uid: string, callback: (items: Support
   return subscribeListWithSorting<SupportTicketRecord>('supportTickets', [where('userId', '==', uid)], callback)
 }
 
+export function subscribeToAllSupportTickets(callback: (items: SupportTicketRecord[]) => void) {
+  return subscribeListWithSorting<SupportTicketRecord>('supportTickets', [], callback)
+}
+
+export async function addTicketReply(
+  ticketId: string,
+  reply: { authorRole: 'user' | 'admin'; authorName: string; message: string },
+) {
+  const { arrayUnion } = await import('firebase/firestore')
+  await updateDoc(doc(supportTicketsCollection(), ticketId), {
+    replies: arrayUnion({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      authorRole: reply.authorRole,
+      authorName: reply.authorName,
+      message: reply.message,
+      createdAt: Timestamp.now(),
+    }),
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function resolveTicket(ticketId: string) {
+  await updateDoc(doc(supportTicketsCollection(), ticketId), {
+    status: 'Resolved',
+    updatedAt: serverTimestamp(),
+  })
+}
+
 export async function createSupportTicket(
   uid: string,
-  payload: Omit<SupportTicketRecord, 'id' | 'userId' | 'status' | 'createdAt' | 'updatedAt'>,
+  payload: Omit<SupportTicketRecord, 'id' | 'userId' | 'status' | 'createdAt' | 'updatedAt' | 'replies'>,
 ) {
   await addDoc(supportTicketsCollection(), {
     userId: uid,
     ...payload,
     status: 'Open',
+    replies: [],
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   })
 
-  await createUserNotification(uid, {
-    title: 'Support ticket created',
-    message: `Your support request "${payload.subject}" has been received.`,
-    type: 'info',
-    link: '/dashboard/support',
-  })
+  // Notify the user — swallow permission errors gracefully
+  try {
+    await createUserNotification(uid, {
+      title: 'Support ticket created',
+      message: `Your support request "${payload.subject}" has been received.`,
+      type: 'info',
+      link: '/dashboard/support',
+    })
+  } catch {
+    // Notification is best-effort; ticket creation already succeeded
+  }
 }
 
 export async function createSupportedAsset(payload: Pick<SupportedAsset, 'symbol' | 'name' | 'network' | 'address' | 'note'>) {
@@ -438,11 +472,16 @@ export async function createKycSubmission(uid: string, payload: Partial<Omit<Kyc
     updatedAt: serverTimestamp(),
   })
 
-  await createUserNotification(uid, {
-    title: 'KYC submission received',
-    message: 'Your verification request is under review. You will be notified when it is approved.',
-    type: 'info',
-  })
+  // Notification is best-effort; swallow permission errors so KYC success is not masked
+  try {
+    await createUserNotification(uid, {
+      title: 'KYC submission received',
+      message: 'Your verification request is under review. You will be notified when it is approved.',
+      type: 'info',
+    })
+  } catch {
+    // Safe to ignore — KYC submission already succeeded
+  }
 }
 
 export function subscribeToAllUsers(callback: (items: UserProfile[]) => void) {
