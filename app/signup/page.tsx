@@ -79,7 +79,7 @@ export default function SignupPage() {
               <BrandLogo href="/" light subtitle="Investor Platform" />
             </div>
             <p className="text-sm uppercase tracking-[0.32em] text-cyan-300">Start your investment journey</p>
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Create your GIRDUP account</h1>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">Create your BOLDWAVE account</h1>
             <p className="mt-4 text-sm leading-6 text-slate-300 sm:text-base">
               This form creates your secure investor account and prepares you to complete KYC, fund your wallet, and invest.
             </p>

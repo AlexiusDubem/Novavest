@@ -37,8 +37,8 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const storedPin = localStorage.getItem('girdup-dashboard-pin')
-    const unlocked = storedPin ? sessionStorage.getItem('girdup-dashboard-unlocked') === 'true' : true
+    const storedPin = localStorage.getItem('BOLDWAVE-dashboard-pin')
+    const unlocked = storedPin ? sessionStorage.getItem('BOLDWAVE-dashboard-unlocked') === 'true' : true
     setSessionUnlocked(unlocked)
   }, [])
 
@@ -191,7 +191,7 @@ export default function DashboardLayout({
                  <h2 className="text-3xl font-black tracking-tighter">Terminal Suspended</h2>
               </div>
               <p className="text-base font-bold leading-relaxed opacity-80">
-                Your institutional access has been restricted by GIRDUP security. Support is still accessible for appeal.
+                Your institutional access has been restricted by BOLDWAVE security. Support is still accessible for appeal.
                 <br /><br />
                 <span className="text-[11px] font-black uppercase tracking-widest text-rose-500">REASON: {profile.suspensionReason || 'Direct restriction / Pending Review'}</span>
               </p>

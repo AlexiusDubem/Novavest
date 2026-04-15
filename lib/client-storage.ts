@@ -1,9 +1,9 @@
 'use client'
 
 export const STORAGE_KEYS = {
-  onboardingPending: 'girdup-onboarding-pending',
-  onboardingComplete: 'girdup-onboarding-complete',
-  wallets: 'girdup-wallets',
+  onboardingPending: 'BOLDWAVE-onboarding-pending',
+  onboardingComplete: 'BOLDWAVE-onboarding-complete',
+  wallets: 'BOLDWAVE-wallets',
 } as const
 
 export interface SavedWallet {

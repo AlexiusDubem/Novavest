@@ -158,7 +158,7 @@ export default function KYCPage() {
     <div className="space-y-6">
       <div>
         <h1 className="mb-2 text-3xl font-bold text-primary">Know Your Customer (KYC)</h1>
-        <p className="text-gray-600">Submit your verification details for GIRDUP review before funding and investing begin.</p>
+        <p className="text-gray-600">Submit your verification details for BOLDWAVE review before funding and investing begin.</p>
       </div>
 
       <Card className="border-2 border-secondary">

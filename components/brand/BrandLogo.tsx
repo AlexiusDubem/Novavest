@@ -19,23 +19,16 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const textPrimary = light ? 'text-white' : 'text-slate-950'
   const textSecondary = light ? 'text-cyan-200' : 'text-slate-500'
-  const chipBg = light ? 'border-white/15 bg-white/10' : 'border-slate-200 bg-white'
-  const chipAccent = light ? 'text-cyan-200' : 'text-primary'
 
   return (
     <Link href={href} className={`flex items-center gap-3 ${className}`.trim()}>
-      <div className={`flex h-11 w-11 items-center justify-center rounded-2xl border shadow-sm ${chipBg}`}>
-        <div className={`grid grid-cols-2 gap-1.5 ${chipAccent}`}>
-          <span className="h-2.5 w-2.5 rounded-[4px] border border-current" />
-          <span className="h-2.5 w-2.5 rounded-[4px] border border-current" />
-          <span className="h-2.5 w-2.5 rounded-[4px] border border-current" />
-          <span className="h-2.5 w-2.5 rounded-[4px] border border-current" />
-        </div>
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center object-contain overflow-visible p-0.5">
+         <img src="/icon.svg" alt="BoldWave Logo" className="h-full w-full object-contain" />
       </div>
       {!compact && (
         <div className="leading-none">
-          <p className={`text-2xl font-semibold tracking-tight ${textPrimary}`}>GIRDUP</p>
-          <p className={`mt-1 text-[11px] uppercase tracking-[0.32em] ${textSecondary}`}>{subtitle}</p>
+          <p className={`text-2xl font-black tracking-tight ${textPrimary}`}>BOLDWAVE</p>
+          <p className={`mt-1 text-[11px] font-bold uppercase tracking-[0.32em] ${textSecondary}`}>{subtitle}</p>
         </div>
       )}
     </Link>

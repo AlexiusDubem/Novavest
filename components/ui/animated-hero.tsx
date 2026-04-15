@@ -34,7 +34,7 @@ function Hero() {
           </div>
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-7xl max-w-4xl tracking-tighter text-center font-black text-slate-900 leading-[1.1]">
-              <span className="block text-slate-500/80">GIRDUP is</span>
+              <span className="block text-slate-500/80">BOLDWAVE is</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
                 <AnimatePresence mode="wait">

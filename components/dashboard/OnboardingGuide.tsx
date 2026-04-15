@@ -17,7 +17,7 @@ import { markOnboardingComplete } from '@/lib/firebase/firestore'
 
 const steps = [
   {
-    title: 'Welcome to GIRDUP',
+    title: 'Welcome to BOLDWAVE',
     description: 'Your dashboard is set up for funding, wallet management, buying, selling, swapping, and tracking portfolio growth.',
     icon: Sparkles,
   },

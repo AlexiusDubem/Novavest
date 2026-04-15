@@ -16,14 +16,14 @@ const faqs = [
   {
     id: 1,
     category: 'General',
-    question: 'What is GIRDUP?',
-    answer: 'GIRDUP is a live investment workspace where funding, verification, support, and portfolio activity sync in real time.',
+    question: 'What is BOLDWAVE?',
+    answer: 'BOLDWAVE is a live investment workspace where funding, verification, support, and portfolio activity sync in real time.',
   },
   {
     id: 2,
     category: 'Account',
     question: 'Why is my account restricted?',
-    answer: 'If GIRDUP restricts your account, only support remains available until the issue is resolved.',
+    answer: 'If BOLDWAVE restricts your account, only support remains available until the issue is resolved.',
   },
   {
     id: 3,
@@ -95,7 +95,7 @@ export default function SupportPage() {
         <p className="text-gray-600">
           {profile?.accountStatus === 'suspended'
             ? `Your account is suspended. Support is still available. ${profile.suspensionReason || ''}`
-            : 'Get help with your GIRDUP account.'}
+            : 'Get help with your BOLDWAVE account.'}
         </p>
       </div>
 
@@ -273,7 +273,7 @@ export default function SupportPage() {
             <div className="rounded-lg border border-gray-200 p-4 text-center transition hover:border-primary">
               <FileText className="mx-auto mb-2 text-primary" size={24} />
               <p className="mb-1 font-semibold text-gray-900">Email Support</p>
-              <p className="mb-3 text-sm text-gray-600">support@girdup.com</p>
+              <p className="mb-3 text-sm text-gray-600">support@BOLDWAVE.com</p>
               <Button variant="outline" size="sm">Send Email</Button>
             </div>
           </div>

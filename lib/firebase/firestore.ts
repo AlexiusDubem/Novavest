@@ -313,7 +313,7 @@ export async function createDepositRequest(
 
   await createUserNotification(uid, {
     title: 'Payment notice received',
-    message: `Your ${asset.symbol} payment notice for ${expectedAmount} USD is awaiting confirmation from GIRDUP.`,
+    message: `Your ${asset.symbol} payment notice for ${expectedAmount} USD is awaiting confirmation from BOLDWAVE.`,
     type: 'info',
     link: '/dashboard/deposit',
   })
@@ -336,7 +336,7 @@ export async function createInvestmentRequest(
 
   await createUserNotification(uid, {
     title: 'Package request received',
-    message: `${payload.planName} is now awaiting confirmation from GIRDUP.`,
+    message: `${payload.planName} is now awaiting confirmation from BOLDWAVE.`,
     type: 'info',
     link: '/dashboard/investment-plans',
   })
@@ -370,7 +370,7 @@ export async function createWithdrawalRequest(
 
   await createUserNotification(uid, {
     title: 'Withdrawal request submitted',
-    message: `Your withdrawal request for ${amount} USD is awaiting confirmation from GIRDUP.`,
+    message: `Your withdrawal request for ${amount} USD is awaiting confirmation from BOLDWAVE.`,
     type: 'info',
     link: '/dashboard/withdraw',
   })
@@ -396,7 +396,7 @@ export async function createLoanRequest(uid: string, amount: number, termMonths:
 
   await createUserNotification(uid, {
     title: 'Loan request submitted',
-    message: `Your loan request for ${amount} USD is awaiting confirmation from GIRDUP.`,
+    message: `Your loan request for ${amount} USD is awaiting confirmation from BOLDWAVE.`,
     type: 'info',
     link: '/dashboard/loan',
   })
@@ -516,7 +516,7 @@ export async function setDepositRequestStatus(requestId: string, status: Request
       amount: request.expectedAmount,
       status: 'completed',
       title: 'Deposit confirmed',
-      description: `${request.assetSymbol} deposit confirmed by GIRDUP`,
+      description: `${request.assetSymbol} deposit confirmed by BOLDWAVE`,
       assetSymbol: request.assetSymbol,
     })
   }
@@ -590,7 +590,7 @@ export async function setInvestmentRequestStatus(requestId: string, status: Requ
       amount: -request.amount,
       status: 'completed',
       title: 'Investment package started',
-      description: `${request.planName} package activated by GIRDUP`,
+      description: `${request.planName} package activated by BOLDWAVE`,
     })
   }
 
@@ -655,7 +655,7 @@ export async function setWithdrawalRequestStatus(requestId: string, status: Requ
   await createUserNotification(request.userId, {
     title: status === 'approved' ? 'Withdrawal confirmed' : 'Withdrawal update',
     message: status === 'approved'
-      ? `Your withdrawal request for ${request.amount} USD has been confirmed by GIRDUP.`
+      ? `Your withdrawal request for ${request.amount} USD has been confirmed by BOLDWAVE.`
       : `Your withdrawal request could not be completed. ${adminNote || ''}`,
     type: status === 'approved' ? 'success' : 'warning',
     link: '/dashboard/withdraw',
@@ -681,12 +681,12 @@ export async function adjustUserBalance(userId: string, amount: number, note: st
     amount,
     status: 'completed',
     title: amount >= 0 ? 'Deposit confirmed' : 'Balance debit',
-    description: note || (amount >= 0 ? 'Direct account funding by GIRDUP' : 'GIRDUP balance adjustment'),
+    description: note || (amount >= 0 ? 'Direct account funding by BOLDWAVE' : 'BOLDWAVE balance adjustment'),
   })
 
   await createUserNotification(userId, {
     title: amount >= 0 ? 'Account credited' : 'Account debited',
-    message: note || `GIRDUP ${amount >= 0 ? 'credited' : 'debited'} your account by ${Math.abs(amount)} USD.`,
+    message: note || `BOLDWAVE ${amount >= 0 ? 'credited' : 'debited'} your account by ${Math.abs(amount)} USD.`,
     type: amount >= 0 ? 'success' : 'warning',
     link: '/dashboard/transactions',
   })
@@ -739,7 +739,7 @@ export async function setLoanRequestStatus(requestId: string, status: RequestSta
   await createUserNotification(request.userId, {
     title: status === 'approved' ? 'Loan confirmed' : 'Loan update',
     message: status === 'approved'
-      ? `Your loan request for ${request.amount} USD has been confirmed by GIRDUP.`
+      ? `Your loan request for ${request.amount} USD has been confirmed by BOLDWAVE.`
       : `Your loan request could not be completed. ${adminNote || 'Please contact support for details.'}`,
     type: status === 'approved' ? 'success' : 'warning',
     link: '/dashboard/loan',
@@ -844,14 +844,14 @@ export async function seedAdminCollectionsIfMissing() {
       name: 'Bitcoin',
       network: 'Bitcoin',
       address: '1Pn68t3Zx37AjZ9oHvhCWGnPG2a5tstcRd',
-      note: 'Send BTC to this wallet only. After sending, tap "I\'ve Made the Payment" so GIRDUP can confirm it.',
+      note: 'Send BTC to this wallet only. After sending, tap "I\'ve Made the Payment" so BOLDWAVE can confirm it.',
     },
     {
       symbol: 'ETH',
       name: 'Ethereum',
       network: 'ERC-20',
       address: '0x4bfdd1b2368ff5a7f8c0507062c12d2c77e2bb84',
-      note: 'Send ETH to this wallet only. After sending, tap "I\'ve Made the Payment" so GIRDUP can confirm it.',
+      note: 'Send ETH to this wallet only. After sending, tap "I\'ve Made the Payment" so BOLDWAVE can confirm it.',
     },
   ] as const
 

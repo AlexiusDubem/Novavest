@@ -70,7 +70,7 @@ export default function InvestmentPlansPage() {
     if (profile.kycStatus !== 'verified') {
       await fireAlert({
         title: 'Verification needed',
-        text: 'Complete your GIRDUP verification before starting a package.',
+        text: 'Complete your BOLDWAVE verification before starting a package.',
         icon: 'warning',
         confirmButtonText: 'Open verification',
       })
@@ -146,7 +146,7 @@ export default function InvestmentPlansPage() {
       })
       await fireAlert({
         title: 'Package request submitted',
-        text: 'GIRDUP will review your request and notify you once approved.',
+        text: 'BOLDWAVE will review your request and notify you once approved.',
         icon: 'success',
         confirmButtonText: 'OK',
       })
@@ -208,10 +208,10 @@ export default function InvestmentPlansPage() {
                 
                 <Button 
                   onClick={() => handleInvest(plan)}
-                  disabled={isProcessing === plan.id}
+                  disabled={submitting}
                   className="h-14 w-full rounded-2xl bg-emerald-600 text-xs font-black uppercase tracking-widest text-white transition hover:bg-emerald-700 active:scale-[0.98]" 
                 >
-                  {isProcessing === plan.id ? 'Authorizing...' : 'Initialize Mandate'}
+                  {submitting ? 'Authorizing...' : 'Initialize Mandate'}
                 </Button>
               </CardContent>
             </Card>

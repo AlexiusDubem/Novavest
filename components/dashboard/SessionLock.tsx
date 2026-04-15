@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { fireAlert } from '@/lib/alerts'
 
-const PIN_STORAGE_KEY = 'girdup-dashboard-pin'
-const SESSION_UNLOCK_KEY = 'girdup-dashboard-unlocked'
+const PIN_STORAGE_KEY = 'BOLDWAVE-dashboard-pin'
+const SESSION_UNLOCK_KEY = 'BOLDWAVE-dashboard-unlocked'
 
 export function SessionLock({ onAuthenticated }: { onAuthenticated: () => void }) {
   const [storedPin, setStoredPin] = useState<string | null>(null)
@@ -61,7 +61,7 @@ export function SessionLock({ onAuthenticated }: { onAuthenticated: () => void }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/95 p-4">
       <div className="w-full max-w-md rounded-[2rem] border border-slate-700 bg-slate-900/95 p-8 text-white shadow-2xl shadow-black/40">
-        <h2 className="text-3xl font-semibold">GIRDUP Secure Lock</h2>
+        <h2 className="text-3xl font-semibold">BOLDWAVE Secure Lock</h2>
         <p className="mt-3 text-sm text-slate-400">
           {storedPin
             ? 'Enter your 4-digit dashboard PIN to continue.'

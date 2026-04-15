@@ -38,9 +38,9 @@ function formatCountdown(investment: InvestmentRecord) {
 }
 
 const actions = [
-  { label: 'Fund Wallet', icon: faWallet, href: '/dashboard/deposit', description: 'Send funds to a live wallet and notify GIRDUP once payment is made.' },
+  { label: 'Fund Wallet', icon: faWallet, href: '/dashboard/deposit', description: 'Send funds to a live wallet and notify BOLDWAVE once payment is made.' },
   { label: 'Invest', icon: faShoppingBag, href: '/dashboard/investment-plans', description: 'Choose a package and track live ROI as your cycle progresses.' },
-  { label: 'Withdraw', icon: faCreditCard, href: '/dashboard/withdraw', description: 'Send a live withdrawal request for GIRDUP confirmation.' },
+  { label: 'Withdraw', icon: faCreditCard, href: '/dashboard/withdraw', description: 'Send a live withdrawal request for BOLDWAVE confirmation.' },
   { label: 'Wallets', icon: faRefresh, href: '/dashboard/wallet', description: 'Manage destination wallets stored in your account.' },
 ]
 
@@ -95,9 +95,9 @@ export default function DashboardPage() {
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 shadow-sm">
             Operational Protocol Live
           </div>
-          <h1 className="text-3xl font-black tracking-tighter text-slate-950 sm:text-5xl">GIRDUP Terminal</h1>
+          <h1 className="text-3xl font-black tracking-tighter text-slate-950 sm:text-5xl">BOLDWAVE Terminal</h1>
           <p className="max-w-xl text-sm font-bold text-slate-500 leading-relaxed sm:text-base">
-            Welcome, {profile?.firstName}. Your workspace is synchronized with the GIRDUP institutional grid.
+            Welcome, {profile?.firstName}. Your workspace is synchronized with the BOLDWAVE institutional grid.
           </p>
         </div>
 

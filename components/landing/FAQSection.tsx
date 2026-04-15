@@ -5,8 +5,8 @@ import { ChevronDown, HelpCircle } from 'lucide-react'
 
 const faqs = [
   {
-    question: 'Is GIRDUP safe and regulated?',
-    answer: 'Yes, GIRDUP is fully regulated by major financial authorities including the SEC, FCA, and FINRA. We maintain the highest security standards with AES-256 encryption and regular third-party audits.',
+    question: 'Is BOLDWAVE safe and regulated?',
+    answer: 'Yes, BOLDWAVE is fully regulated by major financial authorities including the SEC, FCA, and FINRA. We maintain the highest security standards with AES-256 encryption and regular third-party audits.',
   },
   {
     question: 'What is the minimum investment amount?',
@@ -17,7 +17,7 @@ const faqs = [
     answer: 'Most withdrawals are processed within 24 hours. Bank transfers typically appear in your account within 2-3 business days depending on your bank.',
   },
   {
-    question: 'Can I invest in crypto on GIRDUP?',
+    question: 'Can I invest in crypto on BOLDWAVE?',
     answer: 'Absolutely! We support trading of Bitcoin, Ethereum, and 100+ other cryptocurrencies. You can also earn staking rewards on selected coins.',
   },
   {
@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     question: 'Is there a mobile app?',
-    answer: 'Yes! GIRDUP is available on iOS and Android. You can manage your entire portfolio, trade, and monitor real-time prices on the go.',
+    answer: 'Yes! BOLDWAVE is available on iOS and Android. You can manage your entire portfolio, trade, and monitor real-time prices on the go.',
   },
   {
     question: 'How do I start?',
@@ -58,7 +58,7 @@ export function FAQSection() {
             </span>
           </h2>
           <p className="text-lg text-slate-400">
-            Find answers to common questions about GIRDUP
+            Find answers to common questions about BOLDWAVE
           </p>
         </div>
 

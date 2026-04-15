@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
           <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.</p>
 
           <h2>7. Contact Us</h2>
-          <p>If you have any questions about this privacy policy, please contact us at privacy@noxainvest.com.</p>
+          <p>If you have any questions about this privacy policy, please contact us at privacy@boldwave.com.</p>
 
           <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
             <p className="text-sm">

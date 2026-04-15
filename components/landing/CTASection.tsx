@@ -27,7 +27,7 @@ export function CTASection() {
           </h2>
 
           <p className="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Join over 1.2 million investors who are building wealth with GIRDUP. Start with just $100 and grow your portfolio today.
+            Join over 1.2 million investors who are building wealth with BOLDWAVE. Start with just $100 and grow your portfolio today.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-2">

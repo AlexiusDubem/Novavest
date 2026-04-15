@@ -9,25 +9,12 @@ import './globals.css'
 config.autoAddCss = false
 
 export const metadata: Metadata = {
-  title: 'GIRDUP - Illuminate Your Financial Future',
+  title: 'BOLDWAVE - Illuminate Your Financial Future',
   description: 'Premium fintech platform for secure investments, crypto-backed loans, and advanced portfolio management. Build wealth with confidence.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/icon.svg',
+    apple: '/icon.svg',
   },
 }
 

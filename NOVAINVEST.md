@@ -1,4 +1,4 @@
-# NOVAINVEST - Global Investment Platform
+# BOLDWAVE - Global Investment Platform
 
 A professional investment platform built with Next.js 16, React 19, and Tailwind CSS. This is a fully functional demo featuring a landing page and comprehensive user dashboard.
 

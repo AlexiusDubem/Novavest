@@ -77,7 +77,7 @@ export default function LoanPage() {
     <div className="space-y-6">
       <div>
         <h1 className="mb-2 text-3xl font-bold text-primary">Request a Loan</h1>
-        <p className="text-gray-600">Use your approved balance history as the basis for GIRDUP lending review.</p>
+        <p className="text-gray-600">Use your approved balance history as the basis for BOLDWAVE lending review.</p>
       </div>
 
       <div className="flex gap-3 rounded-lg border border-red-200 bg-red-50 p-4">

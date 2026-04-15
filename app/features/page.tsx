@@ -65,7 +65,7 @@ export default function FeaturesPage() {
           <div className="text-center mb-16">
             <h1 className="text-4xl font-bold text-foreground mb-4">Powerful Features for Smart Investing</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover the tools and capabilities that make GIRDUP the premier choice for serious investors.
+              Discover the tools and capabilities that make BOLDWAVE the premier choice for serious investors.
             </p>
           </div>
 
@@ -92,7 +92,7 @@ export default function FeaturesPage() {
             <div className="bg-card border border-border rounded-lg p-8 max-w-2xl mx-auto">
               <h2 className="text-2xl font-semibold mb-4">Ready to Get Started?</h2>
               <p className="text-muted-foreground mb-6">
-                Join thousands of investors who trust GIRDUP for their financial growth.
+                Join thousands of investors who trust BOLDWAVE for their financial growth.
               </p>
               <div className="flex gap-4 justify-center">
                 <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
