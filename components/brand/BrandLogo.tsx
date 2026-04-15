@@ -17,18 +17,20 @@ export function BrandLogo({
   subtitle = 'Investor Platform',
   className = '',
 }: BrandLogoProps) {
-  const textPrimary = light ? 'text-white' : 'text-slate-950'
   const textSecondary = light ? 'text-cyan-200' : 'text-slate-500'
 
   return (
     <Link href={href} className={`flex items-center gap-3 ${className}`.trim()}>
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center object-contain overflow-visible p-0.5">
-         <img src="/icon.svg" alt="BoldWave Logo" className="h-full w-full object-contain" />
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center object-contain overflow-visible p-0.5">
+         <img src="/logo.png" alt="BoldWave Logo" className="h-full w-full object-contain" />
       </div>
       {!compact && (
         <div className="leading-none">
-          <p className={`text-2xl font-black tracking-tight ${textPrimary}`}>BOLDWAVE</p>
-          <p className={`mt-1 text-[11px] font-bold uppercase tracking-[0.32em] ${textSecondary}`}>{subtitle}</p>
+          <p className="flex text-2xl font-black tracking-tighter">
+            <span className={light ? 'text-white' : 'text-slate-950'}>BOLD</span>
+            <span className={light ? 'text-cyan-300' : 'text-cyan-600'}>WAVE</span>
+          </p>
+          <p className={`mt-1 text-[10px] font-black uppercase tracking-[0.4em] ${textSecondary}`}>{subtitle}</p>
         </div>
       )}
     </Link>
