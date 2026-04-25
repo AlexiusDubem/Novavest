@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ShieldCheck } from "lucide-react";
 import { TestimonialCard } from "@/components/ui/testimonial-cards";
 
 const testimonials = [

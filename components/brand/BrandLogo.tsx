@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface BrandLogoProps {
   href?: string
@@ -21,8 +22,15 @@ export function BrandLogo({
 
   return (
     <Link href={href} className={`flex items-center gap-3 ${className}`.trim()}>
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center object-contain overflow-visible p-0.5">
-         <img src="/logo.png" alt="BoldWave Logo" className="h-full w-full object-contain" />
+      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden p-0.5">
+          <Image 
+            src="/logo.png" 
+            alt="BOLDWAVE" 
+            fill 
+            className="object-contain" 
+            priority
+            unoptimized
+          />
       </div>
       {!compact && (
         <div className="leading-none">
