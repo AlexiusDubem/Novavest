@@ -21,6 +21,7 @@ import {
   setKycSubmissionStatus,
   setLoanRequestStatus,
   setUserAccountStatus,
+  setUserWithdrawalPin,
   setWithdrawalRequestStatus,
   subscribeToAllDeposits,
   subscribeToAllInvestmentRequests,
@@ -245,6 +246,15 @@ export default function AdminPage() {
     catch (error) { await fireAlert({ title: 'Sync Error', text: 'Update failed.', icon: 'error', confirmButtonText: 'Retry' }) }
   }
 
+  async function handleSetWithdrawalPin(entry: UserProfile, pin: string) {
+    try {
+      await setUserWithdrawalPin(entry.id, pin)
+      await fireAlert({ title: 'PIN Updated', text: `Withdrawal PIN for ${entry.firstName} has been set to ${pin}.`, icon: 'success', confirmButtonText: 'OK' })
+    } catch (error) {
+       await fireAlert({ title: 'Update Failed', text: 'Firebase error occurred.', icon: 'error', confirmButtonText: 'Retry' })
+    }
+  }
+
   if (loading || !user || !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
@@ -416,7 +426,11 @@ export default function AdminPage() {
           </TabsContent>
 
           <TabsContent value="users" className="focus-visible:outline-none">
-             <UserDirectory users={users} onToggleSuspension={handleToggleSuspension} />
+             <UserDirectory 
+               users={users} 
+               onToggleSuspension={handleToggleSuspension} 
+               onSetWithdrawalPin={handleSetWithdrawalPin}
+             />
           </TabsContent>
 
           <TabsContent value="support" className="focus-visible:outline-none mt-6">

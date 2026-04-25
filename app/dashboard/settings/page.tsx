@@ -12,7 +12,7 @@ import { getFirebaseAuth } from '@/lib/firebase/client'
 import { fireAlert } from '@/lib/alerts'
 import { markOnboardingComplete, saveSettings } from '@/lib/firebase/firestore'
 
-const PIN_KEY = 'BOLDWAVE-dashboard-pin'
+
 
 export default function SettingsPage() {
   const { user, profile } = useAuth()
@@ -20,21 +20,14 @@ export default function SettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(profile?.notifications.email ?? true)
   const [smsNotifications, setSmsNotifications] = useState(profile?.notifications.sms ?? false)
 
-  // PIN state
-  const [newPin, setNewPin] = useState('')
-  const [confirmPin, setConfirmPin] = useState('')
-  const [currentPinExists, setCurrentPinExists] = useState(false)
+
 
   useEffect(() => {
     setEmailNotifications(profile?.notifications.email ?? true)
     setSmsNotifications(profile?.notifications.sms ?? false)
   }, [profile?.notifications.email, profile?.notifications.sms])
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentPinExists(!!localStorage.getItem(PIN_KEY))
-    }
-  }, [])
+
 
   async function handleSavePreferences() {
     if (!user) return
@@ -59,25 +52,7 @@ export default function SettingsPage() {
     await markOnboardingComplete(user.uid)
   }
 
-  function handleSavePin() {
-    if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
-      return fireAlert({ title: 'Invalid PIN', text: 'PIN must be exactly 4 digits.', icon: 'error', confirmButtonText: 'OK' })
-    }
-    if (newPin !== confirmPin) {
-      return fireAlert({ title: 'PIN mismatch', text: 'The PINs you entered do not match.', icon: 'error', confirmButtonText: 'OK' })
-    }
-    localStorage.setItem(PIN_KEY, newPin)
-    setCurrentPinExists(true)
-    setNewPin('')
-    setConfirmPin('')
-    fireAlert({ title: 'PIN saved', text: 'Your 4-digit security PIN has been set. It will be required for withdrawals and session unlock.', icon: 'success', confirmButtonText: 'Done' })
-  }
 
-  function handleClearPin() {
-    localStorage.removeItem(PIN_KEY)
-    setCurrentPinExists(false)
-    fireAlert({ title: 'PIN removed', text: 'Your security PIN has been cleared.', icon: 'info', confirmButtonText: 'OK' })
-  }
 
   return (
     <div className="space-y-6">
@@ -112,50 +87,17 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Security PIN */}
+      {/* Password */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><ShieldCheck size={20} /> Security PIN</CardTitle>
+          <CardTitle className="flex items-center gap-2"><Lock size={20} /> Security</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-gray-600">
-            Your 4-digit PIN is required to unlock the dashboard after inactivity and to confirm withdrawals.
-            {currentPinExists ? ' A PIN is currently set.' : ' No PIN is currently set.'}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">New PIN</label>
-              <Input
-                type="password"
-                maxLength={4}
-                placeholder="4 digits"
-                value={newPin}
-                onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
-                className="tracking-[0.4em] text-center"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Confirm PIN</label>
-              <Input
-                type="password"
-                maxLength={4}
-                placeholder="4 digits"
-                value={confirmPin}
-                onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ''))}
-                className="tracking-[0.4em] text-center"
-              />
-            </div>
+          <div className="rounded-lg border border-gray-200 p-4">
+            <p className="font-semibold text-gray-900">Password reset</p>
+            <p className="mt-1 text-sm text-gray-600">Send a secure password reset email to the address on file.</p>
           </div>
-          <div className="flex gap-3 flex-wrap">
-            <Button onClick={handleSavePin} className="bg-primary text-white hover:bg-primary/90" disabled={newPin.length !== 4 || confirmPin.length !== 4}>
-              {currentPinExists ? 'Change PIN' : 'Set PIN'}
-            </Button>
-            {currentPinExists && (
-              <Button variant="outline" onClick={handleClearPin} className="border-rose-200 text-rose-600 hover:bg-rose-50">
-                Remove PIN
-              </Button>
-            )}
-          </div>
+          <Button variant="outline" onClick={handlePasswordReset}>Send Password Reset Email</Button>
         </CardContent>
       </Card>
 

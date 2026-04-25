@@ -10,6 +10,7 @@ import { faRotate, faUserSlash } from '@fortawesome/free-solid-svg-icons'
 interface UserDirectoryProps {
   users: UserProfile[]
   onToggleSuspension: (user: UserProfile) => void
+  onSetWithdrawalPin: (user: UserProfile, pin: string) => void
 }
 
 export function UserDirectory({ users, onToggleSuspension }: UserDirectoryProps) {
@@ -53,15 +54,28 @@ export function UserDirectory({ users, onToggleSuspension }: UserDirectoryProps)
                     {formatCurrency(entry.balance)}
                   </td>
                   <td className="px-6 py-5 text-right">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={() => onToggleSuspension(entry)}
-                      className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100"
-                    >
-                      <FontAwesomeIcon icon={entry.accountStatus === 'suspended' ? faRotate : faUserSlash} className="mr-2 h-3 w-3" />
-                      {entry.accountStatus === 'suspended' ? 'Restore' : 'Suspend'}
-                    </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => {
+                          const pin = window.prompt(`Assign Withdrawal PIN for ${entry.firstName} (4 digits):`, entry.withdrawalPin)
+                          if (pin !== null) onSetWithdrawalPin(entry, pin)
+                        }}
+                        className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100"
+                      >
+                        PIN: {entry.withdrawalPin || 'NONE'}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => onToggleSuspension(entry)}
+                        className="h-8 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100"
+                      >
+                        <FontAwesomeIcon icon={entry.accountStatus === 'suspended' ? faRotate : faUserSlash} className="mr-2 h-3 w-3" />
+                        {entry.accountStatus === 'suspended' ? 'Restore' : 'Suspend'}
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

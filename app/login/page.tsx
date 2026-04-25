@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { BrandLogo } from '@/components/brand/BrandLogo'
 import { useAuth } from '@/hooks/use-auth'
 import { signInWithEmail, signInWithGoogle } from '@/lib/firebase/auth'
+import { recordUserLogin } from '@/lib/firebase/firestore'
 import { fireAlert } from '@/lib/alerts'
 
 export default function LoginPage() {
@@ -38,7 +39,10 @@ export default function LoginPage() {
 
     try {
       setSubmitting(true)
-      await signInWithEmail(email, password)
+      const creds = await signInWithEmail(email, password)
+      if (creds.user) {
+        await recordUserLogin(creds.user.uid)
+      }
       router.push('/dashboard')
     } catch (error) {
       await fireAlert({
@@ -55,7 +59,10 @@ export default function LoginPage() {
   async function handleGoogleSignIn() {
     try {
       setSubmitting(true)
-      await signInWithGoogle()
+      const creds = await signInWithGoogle()
+      if (creds.user) {
+        await recordUserLogin(creds.user.uid)
+      }
       router.push('/dashboard')
     } catch (error) {
       await fireAlert({

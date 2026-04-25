@@ -20,16 +20,29 @@ export interface UserProfile {
   accountStatus: AccountStatus
   suspensionReason: string
   balance: number
+  totalProfit: number
   activeLoanBalance: number
   kycLevel: number
   kycStatus: KycStatus
   onboardingCompleted: boolean
+  withdrawalPin: string
+  lastLogin?: Timestamp | null
   notifications: {
     email: boolean
     sms: boolean
   }
   createdAt?: Timestamp | null
   updatedAt?: Timestamp | null
+}
+
+export interface ActivityLogRecord {
+  id: string
+  userId: string
+  action: string
+  ipAddress?: string
+  userAgent?: string
+  metadata?: any
+  createdAt: Timestamp
 }
 
 export interface WalletRecord {
@@ -193,6 +206,8 @@ export interface KycSubmission {
   country: string
   documentType?: string
   documentNumber?: string
+  hasDocuments?: boolean
+  documentUrls?: string[]
   status: RequestStatus
   adminNote: string
   createdAt?: Timestamp | null

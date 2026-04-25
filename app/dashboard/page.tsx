@@ -23,6 +23,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faBtc, faEthereum } from '@fortawesome/free-brands-svg-icons'
 
+import { calculateAccruedProfit, formatLiveROI } from '@/lib/profit-math'
+
 function formatCountdown(investment: InvestmentRecord) {
   if (!investment.startedAt) return 'Pending...'
   const started = investment.startedAt.toDate().getTime()
@@ -50,6 +52,7 @@ export default function DashboardPage() {
   const [wallets, setWallets] = useState<WalletRecord[]>([])
   const [investments, setInvestments] = useState<InvestmentRecord[]>([])
   const [copied, setCopied] = useState(false)
+  const [liveAccrual, setLiveAccrual] = useState(0)
 
   useEffect(() => {
     if (!user) return
@@ -58,8 +61,15 @@ export default function DashboardPage() {
     const stopInvestments = subscribeToInvestments(user.uid, setInvestments)
     
     const interval = setInterval(() => {
-      setInvestments(prev => [...prev])
-    }, 1000)
+      // Trigger re-renders for live counters
+      setInvestments(prev => {
+        const active = prev.find(i => i.status === 'active')
+        if (active) {
+          setLiveAccrual(calculateAccruedProfit(active))
+        }
+        return [...prev]
+      })
+    }, 100)
 
     return () => {
       stopTransactions()
@@ -68,6 +78,8 @@ export default function DashboardPage() {
       clearInterval(interval)
     }
   }, [user])
+
+  const totalBalance = (profile?.balance ?? 0) + liveAccrual
 
   const completedDeposits = transactions
     .filter((item) => item.type === 'deposit' || (item.type === 'adjustment' && item.amount > 0))
@@ -105,14 +117,14 @@ export default function DashboardPage() {
           <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm min-w-[200px]">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Ledger Balance</p>
             <p className="mt-2 text-2xl font-black tracking-tighter text-slate-950">
-              {formatCurrency(profile?.balance ?? 0)}
+              {formatCurrency(totalBalance)}
             </p>
           </div>
           <div className="rounded-[28px] border border-emerald-100 bg-emerald-50/30 p-5 shadow-sm min-w-[200px]">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/70">Loan Capacity</p>
-            <p className="mt-2 text-2xl font-black tracking-tighter text-emerald-600">
-              {formatCurrency(profile?.activeLoanBalance ?? 0)}
-            </p>
+             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600/70">Cumulative ROI</p>
+             <p className="mt-2 text-2xl font-black tracking-tighter text-emerald-600">
+               {formatCurrency((profile?.totalProfit ?? 0) + liveAccrual)}
+             </p>
           </div>
         </div>
       </div>
@@ -133,7 +145,7 @@ export default function DashboardPage() {
           <div className="space-y-1">
              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 ml-1">Total Assets</p>
              <div className="text-5xl font-black tracking-tighter text-slate-950 sm:text-7xl lg:text-8xl">
-               {formatCurrency(profile?.balance ?? 0)}
+               {formatCurrency(totalBalance)}
              </div>
           </div>
 
@@ -166,9 +178,9 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="rounded-[32px] border border-slate-200 bg-slate-50/50 p-7 sm:col-span-2 shadow-inner">
-            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Identity Intelligence</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Account Authorization</p>
             <p className="mt-4 text-sm font-bold leading-relaxed text-slate-600">
-              KYC node status: <span className="font-black text-slate-950 uppercase tracking-tight">{profile?.kycStatus?.replace('_', ' ')}</span>. Level {profile?.kycLevel ?? 0} authorization enabled.
+              Identity Node: <span className="font-black text-slate-950 uppercase tracking-tight">{profile?.kycStatus?.replace('_', ' ')}</span>. Authorization Level {profile?.kycLevel ?? 0} enabled.
             </p>
           </div>
         </div>
@@ -215,12 +227,12 @@ export default function DashboardPage() {
                 </div>
                 <div className="rounded-full bg-slate-50 border border-slate-200 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-500">
                    <FontAwesomeIcon icon={faClock} className="mr-2 text-emerald-500" />
-                   Live Pulse: <span className="font-mono text-slate-900 ml-1 text-xs">{formatCountdown(activeInvestment)}</span>
+                   Window: <span className="font-mono text-slate-900 ml-1 text-xs">{formatCountdown(activeInvestment)}</span>
                 </div>
               </div>
               <h2 className="text-5xl font-black tracking-tighter text-slate-950 sm:text-7xl">{activeInvestment.planName}</h2>
               <p className="max-w-xl text-base font-bold text-slate-500 leading-relaxed sm:text-lg">
-                Quantum mandate currently active. Accumulating ROI on sub-atomic cycle maturity ({activeInvestment.termDays} days).
+                Quantum mandate currently active. Accumulating yield on sub-atomic cycle maturity ({activeInvestment.termDays} days).
               </p>
             </div>
 
@@ -230,20 +242,20 @@ export default function DashboardPage() {
                 <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-slate-900 sm:text-4xl">{formatCurrency(activeInvestment.principal)}</p>
               </div>
               <div className="rounded-[32px] border border-emerald-100 bg-emerald-50 p-8 transition hover:shadow-md">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">Projected ROI</p>
-                <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-emerald-600 sm:text-4xl">+{activeInvestment.roiPercent}%</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">Current Yield</p>
+                <p className="mt-4 font-mono text-3xl font-black tracking-tighter text-emerald-600 sm:text-4xl">+{formatLiveROI(activeInvestment)}%</p>
               </div>
               <div className="rounded-[32px] border border-slate-100 bg-white p-8 shadow-sm sm:col-span-2 xl:col-span-1">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Maturity Window</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Accrued Profit</p>
                 <div className="mt-4 flex items-baseline gap-2">
-                  <span className="font-mono text-3xl font-black tracking-tighter text-slate-900 sm:text-4xl">{activeInvestment.termDays}</span>
-                  <span className="text-[11px] font-black text-slate-400 tracking-[0.25em]">DAYS</span>
+                  <span className="font-mono text-3xl font-black tracking-tighter text-emerald-600 sm:text-4xl">{formatCurrency(liveAccrual)}</span>
                 </div>
               </div>
             </div>
           </div>
         </section>
       )}
+
 
       <MarketSimulationChart activeInvestment={activeInvestment} />
 

@@ -59,7 +59,7 @@ function mapSnapshot<T extends { id: string }>(
 }
 
 function portfolioIdFromUid(uid: string) {
-  return `GD-${uid.slice(0, 6).toUpperCase()}`
+  return `BW-${uid.slice(0, 6).toUpperCase()}`
 }
 
 export async function createUserProfile(user: User, payload: SignupPayload) {
@@ -78,10 +78,13 @@ export async function createUserProfile(user: User, payload: SignupPayload) {
     accountStatus: 'active',
     suspensionReason: '',
     balance: 0,
+    totalProfit: 0,
     activeLoanBalance: 0,
     kycLevel: 0,
     kycStatus: 'not_started',
     onboardingCompleted: false,
+    withdrawalPin: '',
+    lastLogin: serverTimestamp(),
     notifications: {
       email: true,
       sms: false,
@@ -91,6 +94,30 @@ export async function createUserProfile(user: User, payload: SignupPayload) {
   }
 
   await setDoc(profileRef, profile, { merge: true })
+  await logUserActivity(user.uid, 'ACCOUNT_CREATED', { email: payload.email })
+}
+
+export async function logUserActivity(userId: string, action: string, metadata: any = {}) {
+  try {
+    await addDoc(collection(getDb(), 'activityLogs'), {
+      userId,
+      action,
+      metadata,
+      ipAddress: 'detected', // Placeholder for edge function IP
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
+      createdAt: serverTimestamp(),
+    })
+  } catch (err) {
+    console.warn('Activity log failed:', err)
+  }
+}
+
+export async function recordUserLogin(uid: string) {
+  await updateDoc(doc(usersCollection(), uid), {
+    lastLogin: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  })
+  await logUserActivity(uid, 'USER_LOGIN')
 }
 
 export async function ensureOAuthUserProfile(user: User) {
@@ -122,6 +149,13 @@ export function subscribeToUserProfile(uid: string, callback: (profile: UserProf
 export async function updateUserProfile(uid: string, payload: Partial<ProfileUpdatePayload & UserProfile>) {
   await updateDoc(doc(usersCollection(), uid), {
     ...payload,
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function setUserWithdrawalPin(uid: string, pin: string) {
+  await updateDoc(doc(usersCollection(), uid), {
+    withdrawalPin: pin,
     updatedAt: serverTimestamp(),
   })
 }

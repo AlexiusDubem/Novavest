@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { OnboardingGuide } from '@/components/dashboard/OnboardingGuide'
-import { SessionLock } from '@/components/dashboard/SessionLock'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
@@ -31,40 +30,11 @@ export default function DashboardLayout({
   const pathname = usePathname()
   const { user, profile, loading } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sessionUnlocked, setSessionUnlocked] = useState(true)
   const [notifications, setNotifications] = useState<NotificationRecord[]>([])
   const [showNotifications, setShowNotifications] = useState(false)
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const storedPin = localStorage.getItem('BOLDWAVE-dashboard-pin')
-    const unlocked = storedPin ? sessionStorage.getItem('BOLDWAVE-dashboard-unlocked') === 'true' : true
-    setSessionUnlocked(unlocked)
-  }, [])
 
-  // Inactivity timeout — lock after 10 minutes
-  useEffect(() => {
-    if (!sessionUnlocked) return
-    const TIMEOUT_MS = 10 * 60 * 1000
-    let timer: ReturnType<typeof setTimeout>
 
-    function resetTimer() {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-        sessionStorage.removeItem('BOLDWAVE-dashboard-unlocked')
-        setSessionUnlocked(false)
-      }, TIMEOUT_MS)
-    }
-
-    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart']
-    events.forEach((e) => window.addEventListener(e, resetTimer))
-    resetTimer()
-
-    return () => {
-      clearTimeout(timer)
-      events.forEach((e) => window.removeEventListener(e, resetTimer))
-    }
-  }, [sessionUnlocked])
 
   useEffect(() => {
     if (!loading && !user && pathname.startsWith('/dashboard')) {
@@ -102,9 +72,6 @@ export default function DashboardLayout({
     )
   }
 
-  if (!sessionUnlocked) {
-    return <SessionLock onAuthenticated={() => setSessionUnlocked(true)} />
-  }
 
   const isSuspended = profile.accountStatus === 'suspended'
 

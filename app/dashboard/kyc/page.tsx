@@ -116,6 +116,7 @@ export default function KYCPage() {
       if (formData.zipCode) kycPayload.zipCode = formData.zipCode
       if (formData.documentType) kycPayload.documentType = formData.documentType
       if (formData.documentNumber) kycPayload.documentNumber = formData.documentNumber
+      kycPayload.hasDocuments = true
 
       await createKycSubmission(user.uid, kycPayload)
       
@@ -249,6 +250,33 @@ export default function KYCPage() {
                   </div>
                 )
               })}
+
+              {currentStep === 2 && (
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition hover:border-primary/50 group">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 group-hover:bg-primary/5 transition-colors">
+                      <Clock className="h-6 w-6 text-slate-400 group-hover:text-primary" />
+                    </div>
+                    <p className="mt-4 text-xs font-black uppercase tracking-widest text-slate-900">Identity Document</p>
+                    <p className="mt-1 text-[10px] font-bold text-slate-400 leading-relaxed px-2">Front & Back of Passport or National ID</p>
+                    <label className="mt-5 block">
+                      <span className="cursor-pointer rounded-full bg-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800 transition">Select File</span>
+                      <input type="file" className="hidden" accept="image/*" />
+                    </label>
+                  </div>
+                  <div className="rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition hover:border-primary/50 group">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 group-hover:bg-primary/5 transition-colors">
+                      <Clock className="h-6 w-6 text-slate-400 group-hover:text-primary" />
+                    </div>
+                    <p className="mt-4 text-xs font-black uppercase tracking-widest text-slate-900">Proof of Residence</p>
+                    <p className="mt-1 text-[10px] font-bold text-slate-400 leading-relaxed px-2">Utility bill or Bank statement (Last 3m)</p>
+                    <label className="mt-5 block">
+                      <span className="cursor-pointer rounded-full bg-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800 transition">Select File</span>
+                      <input type="file" className="hidden" accept="image/*" />
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-3">

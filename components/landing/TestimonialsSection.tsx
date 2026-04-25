@@ -33,28 +33,33 @@ export function TestimonialsSection() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 py-24 sm:py-32">
+    <section className="relative overflow-hidden landing-section-dark py-24 sm:py-32">
+       {/* Background decorative elements */}
+       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+       
        <div className="container relative z-10 mx-auto px-6">
           <div className="flex flex-col items-center justify-between gap-20 lg:flex-row">
-             <div className="max-w-xl space-y-8">
-                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 shadow-sm">
+             <div className="max-w-xl space-y-8 animate-fade-in-up">
+                <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/20 bg-teal-500/5 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-teal-400 shadow-sm">
+                   <ShieldCheck size={14} />
                    Institutional Trust
                 </div>
-                <h2 className="text-4xl font-black tracking-tighter text-slate-900 sm:text-6xl">
-                   Validated by the World's Best.
+                <h2 className="text-4xl font-black tracking-tighter text-white sm:text-6xl leading-tight">
+                   Validated by the <br />
+                   <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent italic">World's Best.</span>
                 </h2>
-                <p className="text-lg font-bold leading-relaxed text-slate-500">
+                <p className="text-lg font-medium leading-relaxed text-slate-400">
                    Join 45,000+ institutional traders who rely on BOLDWAVE for high-frequency asset management and secure treasury growth.
                 </p>
                 <div className="flex items-center gap-8 pt-4">
                    <div>
-                      <p className="text-3xl font-black text-slate-900">45k+</p>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Terminals</p>
+                      <p className="text-3xl font-black text-white">45k+</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Terminals</p>
                    </div>
-                   <div className="h-10 w-px bg-slate-200" />
+                   <div className="h-10 w-px bg-white/10" />
                    <div>
-                      <p className="text-3xl font-black text-slate-900">$2.4B</p>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Assets Managed</p>
+                      <p className="text-3xl font-black text-white">$2.4B</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Assets Managed</p>
                    </div>
                 </div>
              </div>

@@ -1,6 +1,6 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { Hero } from '@/components/ui/animated-hero'
+import { HeroSection } from '@/components/landing/HeroSection'
 import { FeaturesSection } from '@/components/landing/FeaturesSection'
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection'
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
@@ -10,10 +10,10 @@ import { CTASection } from '@/components/landing/CTASection'
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-[#020617]">
       <Header />
       <main className="flex-1">
-        <Hero />
+        <HeroSection />
         <TestimonialsSection />
         <FeaturesSection />
         <HowItWorksSection />

