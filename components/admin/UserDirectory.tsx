@@ -13,7 +13,7 @@ interface UserDirectoryProps {
   onSetWithdrawalPin: (user: UserProfile, pin: string) => void
 }
 
-export function UserDirectory({ users, onToggleSuspension }: UserDirectoryProps) {
+export function UserDirectory({ users, onToggleSuspension, onSetWithdrawalPin }: UserDirectoryProps) {
   return (
     <Card className="rounded-[28px] border-slate-200 overflow-hidden">
       <CardHeader>

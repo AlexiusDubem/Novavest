@@ -245,10 +245,15 @@ export default function AdminPage() {
     try { await setUserAccountStatus(entry.id, nextStatus, reason) } 
     catch (error) { await fireAlert({ title: 'Sync Error', text: 'Update failed.', icon: 'error', confirmButtonText: 'Retry' }) }
   }
-
   async function handleSetWithdrawalPin(entry: UserProfile, pin: string) {
     try {
       await setUserWithdrawalPin(entry.id, pin)
+      await createUserNotification(entry.id, {
+        title: 'Withdrawal PIN Secured',
+        message: 'Your unique withdrawal PIN has been successfully generated and applied to your account. You can now proceed with secure transactions.',
+        type: 'success',
+        link: '/dashboard/settings'
+      })
       await fireAlert({ title: 'PIN Updated', text: `Withdrawal PIN for ${entry.firstName} has been set to ${pin}.`, icon: 'success', confirmButtonText: 'OK' })
     } catch (error) {
        await fireAlert({ title: 'Update Failed', text: 'Firebase error occurred.', icon: 'error', confirmButtonText: 'Retry' })
