@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   },
 }
 
+import { CookieConsent } from '@/components/CookieConsent'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +32,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" forcedTheme="light" enableSystem={false}>
             {children}
             <Toaster richColors position="top-right" />
+            <CookieConsent />
           </ThemeProvider>
         </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
