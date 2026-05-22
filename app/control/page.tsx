@@ -439,7 +439,7 @@ export default function AdminPage() {
           </TabsContent>
 
           <TabsContent value="support" className="focus-visible:outline-none mt-6">
-            <SupportInbox tickets={supportTickets} />
+            <SupportInbox tickets={supportTickets} users={users} />
           </TabsContent>
 
           <TabsContent value="tools" className="focus-visible:outline-none">

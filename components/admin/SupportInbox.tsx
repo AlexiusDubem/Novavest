@@ -7,13 +7,14 @@ import { ArrowLeft, Send, CheckCircle, MessageCircle } from 'lucide-react'
 import { addTicketReply, resolveTicket } from '@/lib/firebase/firestore'
 import { formatDateTime } from '@/lib/formatters'
 import { fireAlert } from '@/lib/alerts'
-import type { SupportTicketRecord } from '@/lib/firebase/types'
+import type { SupportTicketRecord, UserProfile } from '@/lib/firebase/types'
 
 interface Props {
   tickets: SupportTicketRecord[]
+  users?: UserProfile[]
 }
 
-export function SupportInbox({ tickets }: Props) {
+export function SupportInbox({ tickets, users }: Props) {
   // Store only ID so the derived ticket is always live from the tickets prop
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [replyText, setReplyText] = useState('')
@@ -22,6 +23,14 @@ export function SupportInbox({ tickets }: Props) {
 
   // Derive current ticket from live tickets prop — replies update automatically
   const selected = selectedId ? tickets.find((t) => t.id === selectedId) ?? null : null
+
+  function getUserName(userId: string) {
+    if (!users) return 'Unknown Client'
+    const found = users.find((u) => u.uid === userId)
+    if (!found) return 'Unknown Client'
+    const fullName = `${found.firstName} ${found.lastName}`.trim()
+    return fullName || found.email || 'Unnamed User'
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -61,7 +70,14 @@ export function SupportInbox({ tickets }: Props) {
                 <ArrowLeft size={12} /> All Tickets
               </button>
               <p className="font-black text-slate-900 text-base">{selected.subject}</p>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">{selected.category} · {formatDateTime(selected.createdAt)}</p>
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap text-[10px] font-black uppercase tracking-widest">
+                <span className="rounded bg-slate-150 text-slate-700 px-2 py-0.5 ring-1 ring-slate-200">
+                  Client: {getUserName(selected.userId)}
+                </span>
+                <span className="text-slate-400">
+                  {selected.category} · {formatDateTime(selected.createdAt)}
+                </span>
+              </div>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${selected.status === 'Open' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>{selected.status}</span>
@@ -80,7 +96,7 @@ export function SupportInbox({ tickets }: Props) {
           {/* Original message */}
           <div className="flex justify-start">
             <div className="max-w-[80%] rounded-[20px] rounded-tl-sm bg-white border border-slate-200 px-5 py-4 shadow-sm">
-              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">User · {formatDateTime(selected.createdAt)}</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">{getUserName(selected.userId)} · {formatDateTime(selected.createdAt)}</p>
               <p className="text-sm leading-relaxed text-slate-800">{selected.message}</p>
             </div>
           </div>
@@ -93,7 +109,7 @@ export function SupportInbox({ tickets }: Props) {
             <div key={reply.id} className={`flex ${reply.authorRole === 'admin' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[80%] rounded-[20px] px-5 py-4 shadow-sm ${reply.authorRole === 'admin' ? 'bg-emerald-600 text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm'}`}>
                 <p className={`text-[9px] font-black uppercase tracking-widest mb-2 ${reply.authorRole === 'admin' ? 'text-emerald-200' : 'text-slate-400'}`}>
-                  {reply.authorRole === 'admin' ? '🛡 BOLDWAVE Support' : 'User'} · {reply.createdAt ? formatDateTime(reply.createdAt) : 'Just now'}
+                  {reply.authorRole === 'admin' ? '🛡 BOLDWAVE Support' : getUserName(selected.userId)} · {reply.createdAt ? formatDateTime(reply.createdAt) : 'Just now'}
                 </p>
                 <p className="text-sm leading-relaxed">{reply.message}</p>
               </div>
@@ -145,21 +161,21 @@ export function SupportInbox({ tickets }: Props) {
       {open.length > 0 && (
         <div className="space-y-3">
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Open · {open.length}</p>
-          {open.map((ticket) => <TicketRow key={ticket.id} ticket={ticket} onClick={() => setSelectedId(ticket.id)} />)}
+          {open.map((ticket) => <TicketRow key={ticket.id} ticket={ticket} onClick={() => setSelectedId(ticket.id)} getUserName={getUserName} />)}
         </div>
       )}
 
       {resolved.length > 0 && (
         <div className="space-y-3">
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Resolved · {resolved.length}</p>
-          {resolved.map((ticket) => <TicketRow key={ticket.id} ticket={ticket} onClick={() => setSelectedId(ticket.id)} />)}
+          {resolved.map((ticket) => <TicketRow key={ticket.id} ticket={ticket} onClick={() => setSelectedId(ticket.id)} getUserName={getUserName} />)}
         </div>
       )}
     </div>
   )
 }
 
-function TicketRow({ ticket, onClick }: { ticket: SupportTicketRecord; onClick: () => void }) {
+function TicketRow({ ticket, onClick, getUserName }: { ticket: SupportTicketRecord; onClick: () => void; getUserName: (userId: string) => string }) {
   return (
     <button onClick={onClick} className="w-full text-left rounded-[22px] border border-slate-200 bg-white p-5 transition hover:shadow-md hover:border-emerald-500/30 active:scale-[0.99]">
       <div className="flex items-start justify-between gap-4">
@@ -172,7 +188,13 @@ function TicketRow({ ticket, onClick }: { ticket: SupportTicketRecord; onClick: 
             )}
           </div>
           <p className="font-bold text-slate-900 truncate text-sm">{ticket.subject}</p>
-          <p className="text-[10px] text-slate-400 mt-0.5">{ticket.category} · {formatDateTime(ticket.createdAt)}</p>
+          <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px] text-slate-400 font-medium">
+            <span className="text-slate-900 font-bold">{getUserName(ticket.userId)}</span>
+            <span>•</span>
+            <span>{ticket.category}</span>
+            <span>•</span>
+            <span>{formatDateTime(ticket.createdAt)}</span>
+          </div>
         </div>
         <MessageCircle size={16} className="shrink-0 text-slate-300 mt-1" />
       </div>
