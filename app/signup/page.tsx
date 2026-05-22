@@ -1,20 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { BrandLogo } from '@/components/brand/BrandLogo'
 import { useAuth } from '@/hooks/use-auth'
-import { signInWithGoogle, signOutUser } from '@/lib/firebase/auth'
+import { signInWithGoogleRaw, signOutUser } from '@/lib/firebase/auth'
 import { createUserProfile } from '@/lib/firebase/firestore'
 import { fireAlert } from '@/lib/alerts'
 
 export default function SignupPage() {
   const router = useRouter()
-  const { user, loading } = useAuth()
+  const { user, profile, loading } = useAuth()
   const [submitting, setSubmitting] = useState(false)
+  const submittingRef = useRef(false) // ref so the useEffect can read latest value without re-running
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
@@ -32,10 +33,12 @@ export default function SignupPage() {
   })
 
   useEffect(() => {
-    if (!loading && user) {
+    // Don't redirect while the signup submit is in progress
+    if (submittingRef.current) return
+    if (!loading && user && profile) {
       router.replace('/dashboard')
     }
-  }, [loading, router, user])
+  }, [loading, router, user, profile])
 
   function updateField(field: keyof typeof formData, value: string) {
     setFormData((current) => ({ ...current, [field]: value }))
@@ -75,16 +78,22 @@ export default function SignupPage() {
 
     try {
       setSubmitting(true)
+      submittingRef.current = true
 
-      // 3. Trigger Google Sign-In as verification
-      const googleUser = await signInWithGoogle()
+      const cleanEmail = formData.email.trim().toLowerCase()
+      const normalizedFormData = { ...formData, email: cleanEmail }
+
+      // 3. Trigger Google Sign-In as verification (RAW — no auto profile creation)
+      const googleUser = await signInWithGoogleRaw()
 
       if (!googleUser || !googleUser.email) {
         throw new Error('Google Sign-In returned no valid email address. Please try again.')
       }
 
+      const googleEmail = googleUser.email.trim().toLowerCase()
+
       // 4. Verify Google email matches form email
-      if (googleUser.email.toLowerCase() !== formData.email.toLowerCase()) {
+      if (googleEmail !== cleanEmail) {
         await signOutUser() // Sign out mismatched user session immediately
         await fireAlert({
           title: 'Verification Mismatch',
@@ -92,8 +101,8 @@ export default function SignupPage() {
             <div class="text-left space-y-3 text-sm" style="color: #cbd5e1;">
               <p>The Google account you selected does not match the email address provided in the signup form.</p>
               <div class="rounded-2xl border border-white/5 bg-white/5 p-4 space-y-2 mt-2">
-                <p><strong>Signup Form Email:</strong> <span class="text-cyan-400">${formData.email}</span></p>
-                <p><strong>Google Account Email:</strong> <span class="text-rose-400">${googleUser.email}</span></p>
+                <p><strong>Signup Form Email:</strong> <span class="text-cyan-400">${cleanEmail}</span></p>
+                <p><strong>Google Account Email:</strong> <span class="text-rose-400">${googleEmail}</span></p>
               </div>
               <p class="text-xs text-slate-400 mt-2">Please select the matching Google account to securely verify your identity.</p>
             </div>
@@ -104,8 +113,10 @@ export default function SignupPage() {
         return
       }
 
-      // 5. Create Firestore User Profile with Form data and Investor Suitability options
-      await createUserProfile(googleUser, formData)
+      // 5. Create Firestore User Profile with ALL form data including investor suitability
+      console.log('[Signup] Creating Firestore profile for uid:', googleUser.uid)
+      await createUserProfile(googleUser, normalizedFormData)
+      console.log('[Signup] Firestore profile created successfully')
 
       await fireAlert({
         title: 'Identity Verified & Registered',
@@ -116,7 +127,13 @@ export default function SignupPage() {
 
       router.push('/dashboard')
     } catch (error) {
-      console.error('Signup error:', error)
+      console.error('[Signup] Registration error:', error)
+      // Clean up incomplete session if the auth was established but Firestore profile creation failed
+      try {
+        await signOutUser()
+      } catch (signOutErr) {
+        console.error('[Signup] Clean up signout failed:', signOutErr)
+      }
       await fireAlert({
         title: 'Registration failed',
         text: error instanceof Error ? error.message : 'An error occurred during account verification. Please try again.',
@@ -125,6 +142,7 @@ export default function SignupPage() {
       })
     } finally {
       setSubmitting(false)
+      submittingRef.current = false
     }
   }
 

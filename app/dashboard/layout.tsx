@@ -43,6 +43,18 @@ export default function DashboardLayout({
     }
   }, [loading, pathname, router, user])
 
+  // Safety net: if user is authenticated but has no Firestore profile (e.g. signup race condition),
+  // create a basic profile so they're not stuck on a loading spinner forever.
+  useEffect(() => {
+    if (!loading && user && !profile) {
+      import('@/lib/firebase/firestore').then(({ ensureOAuthUserProfile }) => {
+        ensureOAuthUserProfile(user).catch((err) => {
+          console.error('[Dashboard] Failed to create fallback profile:', err)
+        })
+      })
+    }
+  }, [loading, user, profile])
+
   useEffect(() => {
     if (profile?.accountStatus === 'suspended' && pathname !== '/dashboard/support') {
       router.replace('/dashboard/support')
@@ -62,12 +74,24 @@ export default function DashboardLayout({
     router.push('/login')
   }
 
-  if (loading || !user || !profile) {
+  if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 text-slate-600">
         <div className="flex flex-col items-center gap-4 text-center">
            <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-slate-950" />
            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Securing Session...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show a slightly different loader if we have a user but profile is still loading/being created
+  if (!profile) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 text-slate-600">
+        <div className="flex flex-col items-center gap-4 text-center">
+           <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-slate-950" />
+           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Initializing Profile...</p>
         </div>
       </div>
     )

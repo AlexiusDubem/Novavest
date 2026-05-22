@@ -64,9 +64,12 @@ function portfolioIdFromUid(uid: string) {
 
 export async function createUserProfile(user: User, payload: SignupPayload) {
   const profileRef = doc(usersCollection(), user.uid)
+  const cleanEmail = payload.email.trim().toLowerCase()
+  const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || '').trim().toLowerCase()
+
   const profile: Omit<UserProfile, 'id'> = {
     uid: user.uid,
-    email: payload.email,
+    email: cleanEmail,
     firstName: payload.firstName,
     lastName: payload.lastName,
     phone: payload.phone,
@@ -74,7 +77,7 @@ export async function createUserProfile(user: User, payload: SignupPayload) {
     goal: payload.goal,
     investmentPackage: payload.investmentPackage,
     portfolioId: portfolioIdFromUid(user.uid),
-    role: payload.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ? 'admin' : 'user',
+    role: cleanEmail === adminEmail ? 'admin' : 'user',
     accountStatus: 'active',
     suspensionReason: '',
     balance: 0,
@@ -131,7 +134,7 @@ export async function ensureOAuthUserProfile(user: User) {
   await createUserProfile(user, {
     firstName,
     lastName,
-    email: user.email || '',
+    email: (user.email || '').trim().toLowerCase(),
     phone: '',
     password: '',
     country: '',

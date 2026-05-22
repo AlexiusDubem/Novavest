@@ -28,15 +28,20 @@ export function subscribeToAuthState(callback: (user: User | null) => void) {
 export async function signUpWithEmail(payload: SignupPayload) {
   const auth = getFirebaseAuth()
   await initializeAuthPersistence()
-  const credential = await createUserWithEmailAndPassword(auth, payload.email, payload.password)
-  await createUserProfile(credential.user, payload)
+  const cleanEmail = payload.email.trim().toLowerCase()
+  const credential = await createUserWithEmailAndPassword(auth, cleanEmail, payload.password)
+  await createUserProfile(credential.user, {
+    ...payload,
+    email: cleanEmail,
+  })
   return credential.user
 }
 
 export async function signInWithEmail(email: string, password: string) {
   const auth = getFirebaseAuth()
   await initializeAuthPersistence()
-  const credential = await signInWithEmailAndPassword(auth, email, password)
+  const cleanEmail = email.trim().toLowerCase()
+  const credential = await signInWithEmailAndPassword(auth, cleanEmail, password)
   return credential.user
 }
 
@@ -46,6 +51,15 @@ export async function signInWithGoogle() {
   await initializeAuthPersistence()
   const result = await signInWithPopup(auth, provider)
   await ensureOAuthUserProfile(result.user)
+  return result.user
+}
+
+/** Raw Google popup — does NOT auto-create a Firestore profile. Used by signup flow. */
+export async function signInWithGoogleRaw() {
+  const auth = getFirebaseAuth()
+  const provider = new GoogleAuthProvider()
+  await initializeAuthPersistence()
+  const result = await signInWithPopup(auth, provider)
   return result.user
 }
 
