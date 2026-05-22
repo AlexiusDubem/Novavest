@@ -259,8 +259,8 @@ export default function DashboardPage() {
 
       <MarketSimulationChart activeInvestment={activeInvestment} />
 
-      <section className="grid gap-10 xl:grid-cols-[1fr_0.7fr]">
-        <div className="space-y-6">
+      <section className="grid gap-10 xl:grid-cols-[1fr_0.7fr] w-full min-w-0">
+        <div className="space-y-6 w-full min-w-0">
           <div className="flex items-center justify-between">
              <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase">Recent Pulse Ledger</h2>
              <Link href="/dashboard/transactions" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">View Full Audit</Link>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 w-full min-w-0">
           <h2 className="text-2xl font-black tracking-tight text-slate-900 uppercase">Trusted Wallets</h2>
           <div className="grid grid-cols-1 gap-4">
             {wallets.slice(0, 4).map((wallet) => (
