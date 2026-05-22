@@ -309,6 +309,18 @@ export async function resolveTicket(ticketId: string) {
   })
 }
 
+export async function appealSupportTicket(ticketId: string) {
+  await updateDoc(doc(supportTicketsCollection(), ticketId), {
+    status: 'Open',
+    updatedAt: serverTimestamp(),
+  })
+}
+
+export async function deleteSupportTicket(ticketId: string) {
+  const { deleteDoc } = await import('firebase/firestore')
+  await deleteDoc(doc(supportTicketsCollection(), ticketId))
+}
+
 export async function createSupportTicket(
   uid: string,
   payload: Omit<SupportTicketRecord, 'id' | 'userId' | 'status' | 'createdAt' | 'updatedAt' | 'replies'>,

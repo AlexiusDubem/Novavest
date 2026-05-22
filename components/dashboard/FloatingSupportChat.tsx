@@ -7,6 +7,8 @@ import {
   createSupportTicket,
   subscribeToSupportTickets,
   addTicketReply,
+  appealSupportTicket,
+  deleteSupportTicket,
 } from '@/lib/firebase/firestore'
 import { formatDateTime } from '@/lib/formatters'
 import type { SupportTicketRecord } from '@/lib/firebase/types'
@@ -20,6 +22,8 @@ import {
   Mail,
   ChevronDown,
   Plus,
+  Trash2,
+  Undo2,
 } from 'lucide-react'
 
 type View = 'home' | 'new-ticket' | 'chat'
@@ -96,6 +100,47 @@ export function FloatingSupportChat() {
       await fireAlert({ title: 'Could not send', text: error instanceof Error ? error.message : 'Please try again.', icon: 'error', confirmButtonText: 'OK' })
     } finally {
       setSendingReply(false)
+    }
+  }
+
+  async function handleAppealTicket() {
+    if (!selectedId || !profile) return
+    setSendingReply(true)
+    try {
+      await appealSupportTicket(selectedId)
+      await addTicketReply(selectedId, {
+        authorRole: 'user',
+        authorName: `${profile.firstName} ${profile.lastName}`,
+        message: '⚠️ I would like to appeal and reopen this ticket for further review.',
+      })
+      await fireAlert({ title: 'Ticket Reopened', text: 'You have successfully appealed this ticket. Our support team has been notified.', icon: 'success', confirmButtonText: 'OK' })
+    } catch (error) {
+      await fireAlert({ title: 'Could not reopen', text: error instanceof Error ? error.message : 'Please try again.', icon: 'error', confirmButtonText: 'OK' })
+    } finally {
+      setSendingReply(false)
+    }
+  }
+
+  async function handleDeleteTicket() {
+    if (!selectedId) return
+    const result = await fireAlert({
+      title: 'Delete Ticket?',
+      text: 'Are you sure you want to permanently delete this support ticket? This action is irreversible.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'No, cancel',
+    })
+
+    if (result.isConfirmed) {
+      try {
+        await deleteSupportTicket(selectedId)
+        setSelectedId(null)
+        setView('home')
+        await fireAlert({ title: 'Ticket Deleted', text: 'The ticket has been permanently removed.', icon: 'success', confirmButtonText: 'OK' })
+      } catch (error) {
+        await fireAlert({ title: 'Could not delete', text: error instanceof Error ? error.message : 'Please try again.', icon: 'error', confirmButtonText: 'OK' })
+      }
     }
   }
 
@@ -416,9 +461,32 @@ export function FloatingSupportChat() {
                   </button>
                 </div>
               ) : (
-                <div className="border-t border-slate-100 bg-white p-3 flex items-center gap-2 text-emerald-600">
-                  <CheckCircle size={14} />
-                  <span className="text-[11px] font-black uppercase tracking-widest">Ticket resolved</span>
+                <div className="border-t border-slate-100 bg-slate-50/90 p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-600">
+                    <CheckCircle size={15} className="animate-bounce" />
+                    <span className="text-[11px] font-black uppercase tracking-wider">Ticket Resolved & Closed</span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 leading-normal">
+                    This support ticket is resolved. If your issue is not fully settled, you can appeal/reopen it, or permanently delete the ticket record.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      onClick={handleAppealTicket}
+                      disabled={sendingReply}
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-teal-200 bg-teal-50 py-2.5 text-xs font-bold text-teal-800 transition hover:bg-teal-100 active:scale-95 disabled:opacity-50"
+                    >
+                      <Undo2 size={13} />
+                      Appeal Issue
+                    </button>
+                    <button
+                      onClick={handleDeleteTicket}
+                      disabled={sendingReply}
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 py-2.5 text-xs font-bold text-rose-800 transition hover:bg-rose-100 active:scale-95 disabled:opacity-50"
+                    >
+                      <Trash2 size={13} />
+                      Delete Ticket
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

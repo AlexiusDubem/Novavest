@@ -136,14 +136,14 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.status == 'Open'
       );
-      // Allow users to add replies to their own tickets; admin can do anything
+      // Allow users to add replies to their own tickets or change status to 'Open' (appeal); admin can do anything
       allow update: if isAdmin() || (
         signedIn()
         && resource.data.userId == request.auth.uid
         && request.resource.data.userId == resource.data.userId
-        && request.resource.data.status == resource.data.status
+        && (request.resource.data.status == resource.data.status || request.resource.data.status == 'Open')
       );
-      allow delete: if isAdmin();
+      allow delete: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
     }
 
     match /investmentRequests/{requestId} {
