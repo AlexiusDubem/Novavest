@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { OnboardingGuide } from '@/components/dashboard/OnboardingGuide'
+import { FloatingSupportChat } from '@/components/dashboard/FloatingSupportChat'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
@@ -217,6 +218,7 @@ export default function DashboardLayout({
         </main>
       </div>
       <OnboardingGuide />
+      <FloatingSupportChat />
     </div>
   )
 }

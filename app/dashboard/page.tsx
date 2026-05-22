@@ -115,7 +115,7 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto">
           <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm min-w-[200px]">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Ledger Balance</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Wallet Balance</p>
             <p className="mt-2 text-2xl font-black tracking-tighter text-slate-950">
               {formatCurrency(totalBalance)}
             </p>

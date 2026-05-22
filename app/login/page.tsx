@@ -65,12 +65,37 @@ export default function LoginPage() {
       }
       router.push('/dashboard')
     } catch (error) {
-      await fireAlert({
-        title: 'Google Sign-In failed',
-        text: error instanceof Error ? error.message : 'Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Try again',
-      })
+      console.error('Google Sign-In error:', error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      const isConfigNotFound = errorMessage.includes('auth/configuration-not-found') || 
+                               (typeof error === 'object' && error !== null && 'code' in error && (error as any).code === 'auth/configuration-not-found')
+
+      if (isConfigNotFound) {
+        await fireAlert({
+          title: 'Google Sign-In Setup Required',
+          html: `
+            <div class="text-left space-y-3 text-sm" style="color: #cbd5e1;">
+              <p>Google Sign-In is not currently enabled in your Firebase project console.</p>
+              <p class="font-semibold text-white mt-3 mb-1">To enable it:</p>
+              <ol class="list-decimal pl-5 space-y-2 text-slate-300">
+                <li>Open the <a href="https://console.firebase.google.com/" target="_blank" style="color: #22d3ee; text-decoration: underline;">Firebase Console</a>.</li>
+                <li>Go to <strong>Authentication</strong> &gt; <strong>Sign-in method</strong>.</li>
+                <li>Click <strong>Add new provider</strong> and choose <strong>Google</strong>.</li>
+                <li>Toggle <strong>Enable</strong>, choose a project support email, and click <strong>Save</strong>.</li>
+              </ol>
+            </div>
+          `,
+          icon: 'error',
+          confirmButtonText: 'Got it',
+        })
+      } else {
+        await fireAlert({
+          title: 'Google Sign-In failed',
+          text: errorMessage,
+          icon: 'error',
+          confirmButtonText: 'Try again',
+        })
+      }
     } finally {
       setSubmitting(false)
     }

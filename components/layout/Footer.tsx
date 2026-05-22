@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Globe2, ShieldCheck, TrendingUp } from 'lucide-react'
+import { Phone, Mail, ShieldCheck } from 'lucide-react'
 import { BrandLogo } from '@/components/brand/BrandLogo'
 
 export function Footer() {
@@ -35,24 +35,25 @@ export function Footer() {
           </div>
 
           <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white mb-5">Support</h3>
             <div className="space-y-4 text-sm text-slate-300">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center flex-shrink-0">
-                  <ShieldCheck className="h-4 w-4 text-teal-400" />
+              <a href="tel:+12345678900" className="flex items-center gap-3 hover:text-teal-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-500/20 transition-colors">
+                  <Phone className="h-4 w-4 text-teal-400" />
                 </div>
-                Institutional-grade account protection
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="h-4 w-4 text-blue-400" />
+                +1 (234) 567-8900
+              </a>
+              <a href="mailto:support@boldwave.com" className="flex items-center gap-3 hover:text-teal-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 transition-colors">
+                  <Mail className="h-4 w-4 text-blue-400" />
                 </div>
-                Curated opportunity tracking across sectors
-              </div>
+                support@boldwave.com
+              </a>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                  <Globe2 className="h-4 w-4 text-cyan-400" />
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 </div>
-                Global market coverage and company updates
+                <span className="text-xs text-slate-400">24/7 live support available</span>
               </div>
             </div>
           </div>
