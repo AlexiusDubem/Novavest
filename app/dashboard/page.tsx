@@ -180,7 +180,7 @@ export default function DashboardPage() {
           <div className="rounded-[32px] border border-slate-200 bg-slate-50/50 p-7 sm:col-span-2 shadow-inner">
             <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Account Authorization</p>
             <p className="mt-4 text-sm font-bold leading-relaxed text-slate-600">
-              Identity Node: <span className="font-black text-slate-950 uppercase tracking-tight">{profile?.kycStatus?.replace('_', ' ')}</span>. Authorization Level {profile?.kycLevel ?? 0} enabled.
+              Identity Node: <span className="font-black text-slate-950 uppercase tracking-tight">{profile?.kycStatus?.replace('_', ' ')}</span>. Secure Authorization Enabled.
             </p>
           </div>
         </div>

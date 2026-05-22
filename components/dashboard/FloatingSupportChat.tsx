@@ -235,11 +235,11 @@ export function FloatingSupportChat() {
               <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-4">
                 <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-slate-400">Contact Us Directly</p>
                 <div className="flex flex-col gap-2">
-                  <a href="tel:+12345678900" className="flex items-center gap-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 transition-colors">
+                  <a href="https://wa.me/14452265410" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 transition-colors">
                     <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 ring-1 ring-teal-100">
                       <Phone className="h-3.5 w-3.5 text-teal-500" />
                     </div>
-                    +1 (234) 567-8900
+                    +1 (445) 226-5410 (WhatsApp only)
                   </a>
                   <a href="mailto:support@boldwave.com" className="flex items-center gap-2.5 text-sm font-bold text-slate-700 hover:text-teal-600 transition-colors">
                     <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 ring-1 ring-blue-100">

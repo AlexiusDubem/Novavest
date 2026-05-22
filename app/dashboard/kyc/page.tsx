@@ -168,9 +168,8 @@ export default function KYCPage() {
         </CardHeader>
         <CardContent className="flex items-center justify-between gap-6">
           <div>
-            <p className="text-sm text-gray-600">Verification Level</p>
-            <p className="mt-1 text-2xl font-bold text-secondary">Level {profile?.kycLevel ?? 0}</p>
-            <p className="mt-2 text-sm capitalize text-gray-600">Status: {profile?.kycStatus?.replace('_', ' ')}</p>
+            <p className="text-sm text-gray-600">Verification Status</p>
+            <p className="mt-1 text-2xl font-bold text-secondary capitalize">{profile?.kycStatus?.replace('_', ' ')}</p>
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-600">Latest submission</p>
@@ -251,32 +250,6 @@ export default function KYCPage() {
                 )
               })}
 
-              {currentStep === 2 && (
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition hover:border-primary/50 group">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 group-hover:bg-primary/5 transition-colors">
-                      <Clock className="h-6 w-6 text-slate-400 group-hover:text-primary" />
-                    </div>
-                    <p className="mt-4 text-xs font-black uppercase tracking-widest text-slate-900">Identity Document</p>
-                    <p className="mt-1 text-[10px] font-bold text-slate-400 leading-relaxed px-2">Front & Back of Passport or National ID</p>
-                    <label className="mt-5 block">
-                      <span className="cursor-pointer rounded-full bg-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800 transition">Select File</span>
-                      <input type="file" className="hidden" accept="image/*" />
-                    </label>
-                  </div>
-                  <div className="rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center transition hover:border-primary/50 group">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 group-hover:bg-primary/5 transition-colors">
-                      <Clock className="h-6 w-6 text-slate-400 group-hover:text-primary" />
-                    </div>
-                    <p className="mt-4 text-xs font-black uppercase tracking-widest text-slate-900">Proof of Residence</p>
-                    <p className="mt-1 text-[10px] font-bold text-slate-400 leading-relaxed px-2">Utility bill or Bank statement (Last 3m)</p>
-                    <label className="mt-5 block">
-                      <span className="cursor-pointer rounded-full bg-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-slate-800 transition">Select File</span>
-                      <input type="file" className="hidden" accept="image/*" />
-                    </label>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="flex gap-3">
@@ -319,7 +292,7 @@ export default function KYCPage() {
             <div key={submission.id} className="rounded-lg border border-gray-200 p-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-semibold text-gray-900">Level {submission.level} verification</p>
+                  <p className="font-semibold text-gray-900">Identity Verification</p>
                   <p className="text-sm text-gray-600">{submission.documentType} ending {submission.documentNumber?.slice(-4)}</p>
                 </div>
                 <span className={`rounded-full px-3 py-1 text-xs font-semibold ${submission.status === 'approved' ? 'bg-green-100 text-green-800' : submission.status === 'rejected' ? 'bg-rose-100 text-rose-800' : 'bg-yellow-100 text-yellow-800'}`}>

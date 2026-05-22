@@ -79,7 +79,7 @@ export default function ProfilePage() {
               <div className="mt-2 flex flex-col gap-4 text-sm text-gray-600 md:flex-row">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="text-green-600" size={18} />
-                  <span>KYC Level {profile?.kycLevel ?? 0}</span>
+                  <span className="capitalize">KYC: {profile?.kycStatus?.replace('_', ' ')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <User size={18} />

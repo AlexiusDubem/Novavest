@@ -134,12 +134,41 @@ export default function SignupPage() {
       } catch (signOutErr) {
         console.error('[Signup] Clean up signout failed:', signOutErr)
       }
-      await fireAlert({
-        title: 'Registration failed',
-        text: error instanceof Error ? error.message : 'An error occurred during account verification. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Try again',
-      })
+
+      const isPopupBlocked = 
+        error instanceof Error && 
+        (error.message.includes('popup-blocked') || 
+         (error as any).code === 'auth/popup-blocked' || 
+         error.message.toLowerCase().includes('popup'));
+
+      if (isPopupBlocked) {
+        await fireAlert({
+          title: 'Verification Pop-up Blocked',
+          html: `
+            <div class="text-left space-y-3 text-sm" style="color: #cbd5e1;">
+              <p>Your browser blocked the secure Google verification pop-up window.</p>
+              <div class="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 mt-2">
+                <p class="font-bold text-amber-400">How to authorize:</p>
+                <ul class="list-disc pl-4 space-y-1 mt-1 text-slate-300">
+                  <li>Look for a pop-up blocker icon in your browser's address bar.</li>
+                  <li>Click it and choose <strong>"Always allow pop-ups from this site"</strong>.</li>
+                  <li>Alternatively, open your browser Settings, search for "Pop-ups", and add this site to the allowed list.</li>
+                </ul>
+              </div>
+              <p class="text-xs text-slate-450 mt-2">Once allowed, please click "Try again" to complete your secure registration.</p>
+            </div>
+          `,
+          icon: 'warning',
+          confirmButtonText: 'Try again',
+        })
+      } else {
+        await fireAlert({
+          title: 'Registration failed',
+          text: error instanceof Error ? error.message : 'An error occurred during account verification. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'Try again',
+        })
+      }
     } finally {
       setSubmitting(false)
       submittingRef.current = false

@@ -51,16 +51,18 @@ export default function SupportPage() {
       {/* Contact Cards */}
       <div className="grid gap-4 sm:grid-cols-2">
         <a
-          href="tel:+12345678900"
+          href="https://wa.me/14452265410"
+          target="_blank"
+          rel="noopener noreferrer"
           className="group flex items-center gap-5 rounded-[32px] border border-slate-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-teal-200 hover:shadow-xl hover:shadow-teal-500/5"
         >
           <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[20px] bg-teal-50 ring-1 ring-teal-100 transition group-hover:bg-teal-500 group-hover:ring-teal-500">
             <Phone className="h-6 w-6 text-teal-600 transition group-hover:text-white" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Phone Support</p>
-            <p className="mt-1 text-lg font-black tracking-tight text-slate-900">+1 (234) 567-8900</p>
-            <p className="text-xs font-bold text-slate-500 mt-0.5">Mon – Fri, 9am – 6pm EST</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">WhatsApp Support</p>
+            <p className="mt-1 text-lg font-black tracking-tight text-slate-900">+1 (445) 226-5410</p>
+            <p className="text-xs font-bold text-slate-500 mt-0.5">WhatsApp Only</p>
           </div>
           <ArrowRight className="ml-auto h-5 w-5 flex-shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-teal-500" />
         </a>

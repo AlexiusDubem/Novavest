@@ -41,7 +41,7 @@ service cloud.firestore {
         && request.resource.data.balance == resource.data.balance
         && request.resource.data.activeLoanBalance == resource.data.activeLoanBalance
         && request.resource.data.kycLevel == resource.data.kycLevel
-        && request.resource.data.kycStatus == resource.data.kycStatus
+        && (request.resource.data.kycStatus == resource.data.kycStatus || request.resource.data.kycStatus == 'pending')
       );
 
       allow delete: if isOwner(userId) || isAdmin();

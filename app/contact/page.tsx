@@ -152,8 +152,17 @@ export default function ContactPage() {
                   <div className="flex items-center gap-3">
                     <FontAwesomeIcon icon={faPhone} className="text-primary" />
                     <div>
-                      <p className="font-medium">Phone</p>
-                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="font-medium">WhatsApp</p>
+                      <p className="text-muted-foreground">
+                        <a
+                          href="https://wa.me/14452265410"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-primary transition-colors"
+                        >
+                          +1 (445) 226-5410 (WhatsApp only)
+                        </a>
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
