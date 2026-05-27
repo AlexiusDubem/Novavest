@@ -155,12 +155,12 @@ export default function ContactPage() {
                       <p className="font-medium">WhatsApp</p>
                       <p className="text-muted-foreground">
                         <a
-                          href="https://wa.me/14452265410"
+                          href="https://wa.me/12135851753"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-primary transition-colors"
                         >
-                          +1 (445) 226-5410 (WhatsApp only)
+                          +1 (213) 585-1753 (WhatsApp only)
                         </a>
                       </p>
                     </div>

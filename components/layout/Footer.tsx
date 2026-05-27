@@ -37,11 +37,11 @@ export function Footer() {
           <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm">
             <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white mb-5">Support</h3>
             <div className="space-y-4 text-sm text-slate-300">
-              <a href="https://wa.me/14452265410" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-teal-400 transition-colors group">
+              <a href="https://wa.me/12135851753" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-teal-400 transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-500/20 transition-colors">
                   <Phone className="h-4 w-4 text-teal-400" />
                 </div>
-                +1 (445) 226-5410
+                +1 (213) 585-1753
               </a>
               <a href="mailto:support@boldwave.com" className="flex items-center gap-3 hover:text-teal-400 transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 transition-colors">

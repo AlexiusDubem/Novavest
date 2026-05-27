@@ -241,9 +241,28 @@ export default function AdminPage() {
 
   async function handleToggleSuspension(entry: UserProfile) {
     const nextStatus = entry.accountStatus === 'suspended' ? 'active' : 'suspended'
-    const reason = nextStatus === 'suspended' ? window.prompt('Reason for restriction:') ?? '' : ''
-    try { await setUserAccountStatus(entry.id, nextStatus, reason) } 
-    catch (error) { await fireAlert({ title: 'Sync Error', text: 'Update failed.', icon: 'error', confirmButtonText: 'Retry' }) }
+    let reason = ''
+    if (nextStatus === 'suspended') {
+      const promptVal = window.prompt('Reason for restriction:')
+      if (promptVal === null) return // Admin clicked Cancel, abort!
+      reason = promptVal.trim()
+    }
+    try {
+      await setUserAccountStatus(entry.id, nextStatus, reason)
+      await fireAlert({
+        title: nextStatus === 'suspended' ? 'Account Suspended' : 'Account Restored',
+        text: `${entry.firstName} ${entry.lastName}'s account has been successfully ${nextStatus === 'suspended' ? 'suspended' : 'restored'}.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      })
+    } catch (error) {
+      await fireAlert({
+        title: 'Sync Error',
+        text: error instanceof Error ? error.message : 'Update failed.',
+        icon: 'error',
+        confirmButtonText: 'Retry'
+      })
+    }
   }
   async function handleSetWithdrawalPin(entry: UserProfile, pin: string) {
     try {

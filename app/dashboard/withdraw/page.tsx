@@ -63,7 +63,7 @@ export default function WithdrawPage() {
     if (!profile?.withdrawalPin) {
       await fireAlert({ 
         title: 'Withdrawal PIN required', 
-        text: 'Please go to the support page or contact any of our team to purchase the unique withdrawal PIN for your account.', 
+        text: 'Please go to the support page or contact our team to obtain the unique withdrawal PIN for your account.', 
         icon: 'warning', 
         confirmButtonText: 'Contact Support',
         showCancelButton: true
