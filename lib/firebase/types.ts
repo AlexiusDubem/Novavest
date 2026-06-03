@@ -161,9 +161,14 @@ export interface DepositRequest {
   approvedBy?: string | null
 }
 
+export type WithdrawalMethod = 'crypto' | 'wire_usd' | 'wire_gbp'
+
 export interface WithdrawalRequest {
   id: string
   userId: string
+  /** Top-level method discriminator */
+  withdrawalMethod: WithdrawalMethod
+  /** Legacy / display fields kept for backward compat */
   walletId: string
   walletName: string
   network: string
@@ -172,6 +177,22 @@ export interface WithdrawalRequest {
   fee: number
   status: RequestStatus
   adminNote: string
+  /** Crypto-specific */
+  cryptoNetwork?: string
+  cryptoAddress?: string
+  /** Wire shared */
+  wireAccountHolder?: string
+  wireAccountNumber?: string
+  wireBankName?: string
+  /** Wire GBP-specific */
+  wireIban?: string
+  wireSortCode?: string
+  wireSwiftCode?: string
+  wireBankAddress?: string
+  /** Wire USD-specific */
+  wireRoutingNumber?: string
+  wireAchRouting?: string
+  wireAccountType?: string
   createdAt?: Timestamp | null
   updatedAt?: Timestamp | null
   approvedAt?: Timestamp | null
@@ -225,6 +246,10 @@ export interface SignupPayload {
   country: string
   goal: string
   investmentPackage: string
+  experience?: string
+  riskTolerance?: string
+  horizon?: string
+  sourceOfFunds?: string
 }
 
 export interface ProfileUpdatePayload {

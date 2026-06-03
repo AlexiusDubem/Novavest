@@ -39,10 +39,8 @@ export default function LoginPage() {
 
     try {
       setSubmitting(true)
-      const creds = await signInWithEmail(email, password)
-      if (creds.user) {
-        await recordUserLogin(creds.user.uid)
-      }
+      const user = await signInWithEmail(email, password)
+      await recordUserLogin(user.uid)
       router.push('/dashboard')
     } catch (error) {
       await fireAlert({
@@ -59,10 +57,8 @@ export default function LoginPage() {
   async function handleGoogleSignIn() {
     try {
       setSubmitting(true)
-      const creds = await signInWithGoogle()
-      if (creds.user) {
-        await recordUserLogin(creds.user.uid)
-      }
+      const googleUser = await signInWithGoogle()
+      await recordUserLogin(googleUser.uid)
       router.push('/dashboard')
     } catch (error) {
       console.error('Google Sign-In error:', error)

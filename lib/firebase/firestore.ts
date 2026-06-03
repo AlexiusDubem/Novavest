@@ -36,6 +36,7 @@ import type {
   TransactionRecord,
   UserProfile,
   WalletRecord,
+  WithdrawalMethod,
   WithdrawalRequest,
 } from '@/lib/firebase/types'
 
@@ -441,22 +442,75 @@ export function subscribeToWithdrawals(uid: string, callback: (items: Withdrawal
   return subscribeListWithSorting<WithdrawalRequest>('withdrawalRequests', [where('userId', '==', uid)], callback)
 }
 
+export interface WithdrawalRequestPayload {
+  method: WithdrawalMethod
+  amount: number
+  fee: number
+  // Crypto
+  cryptoNetwork?: string
+  cryptoAddress?: string
+  // Wire shared
+  wireAccountHolder?: string
+  wireAccountNumber?: string
+  wireBankName?: string
+  // Wire GBP
+  wireIban?: string
+  wireSortCode?: string
+  wireSwiftCode?: string
+  wireBankAddress?: string
+  // Wire USD
+  wireRoutingNumber?: string
+  wireAchRouting?: string
+  wireAccountType?: string
+}
+
 export async function createWithdrawalRequest(
   uid: string,
-  wallet: WalletRecord,
-  amount: number,
-  fee: number,
+  payload: WithdrawalRequestPayload,
 ) {
+  const { method, amount, fee, cryptoNetwork, cryptoAddress, ...wireFields } = payload
+
+  // Build display label for the notification / history table
+  let walletName = 'Wire Transfer'
+  let network = ''
+  let address = ''
+  if (method === 'crypto') {
+    walletName = cryptoNetwork ?? 'Crypto'
+    network = cryptoNetwork ?? ''
+    address = cryptoAddress ?? ''
+  } else if (method === 'wire_usd') {
+    walletName = `USD Wire — ${wireFields.wireBankName ?? 'Bank Transfer'}`
+    network = 'USD Wire'
+  } else if (method === 'wire_gbp') {
+    walletName = `GBP Wire — ${wireFields.wireBankName ?? 'Bank Transfer'}`
+    network = 'GBP Wire'
+  }
+
   await addDoc(withdrawalRequestsCollection(), {
     userId: uid,
-    walletId: wallet.id,
-    walletName: wallet.name,
-    network: wallet.network,
-    address: wallet.address,
+    withdrawalMethod: method,
+    walletId: '',
+    walletName,
+    network,
+    address,
     amount,
     fee,
     status: 'pending',
     adminNote: '',
+    // Crypto fields
+    cryptoNetwork: cryptoNetwork ?? null,
+    cryptoAddress: cryptoAddress ?? null,
+    // Wire fields
+    wireAccountHolder: wireFields.wireAccountHolder ?? null,
+    wireAccountNumber: wireFields.wireAccountNumber ?? null,
+    wireBankName: wireFields.wireBankName ?? null,
+    wireIban: wireFields.wireIban ?? null,
+    wireSortCode: wireFields.wireSortCode ?? null,
+    wireSwiftCode: wireFields.wireSwiftCode ?? null,
+    wireBankAddress: wireFields.wireBankAddress ?? null,
+    wireRoutingNumber: wireFields.wireRoutingNumber ?? null,
+    wireAchRouting: wireFields.wireAchRouting ?? null,
+    wireAccountType: wireFields.wireAccountType ?? null,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     approvedAt: null,
@@ -465,7 +519,7 @@ export async function createWithdrawalRequest(
 
   await createUserNotification(uid, {
     title: 'Withdrawal request submitted',
-    message: `Your withdrawal request for ${amount} USD is awaiting confirmation from BOLDWAVE.`,
+    message: `Your ${method === 'crypto' ? 'crypto' : 'wire transfer'} withdrawal request for $${amount.toLocaleString()} USD is awaiting confirmation from BOLDWAVE.`,
     type: 'info',
     link: '/dashboard/withdraw',
   })
